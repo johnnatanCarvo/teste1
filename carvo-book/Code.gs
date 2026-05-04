@@ -5,17 +5,41 @@ const GEMINI_API_KEY = 'COLE_SUA_CHAVE_AQUI'; // aistudio.google.com → Get API
 const NOME_PLANILHA  = 'Carvo Book - Relatórios';
 
 // ============================================================
-// ROTA PRINCIPAL — serve o site
+// doGet — mantido para teste rápido via URL
 // ============================================================
 function doGet() {
-  return HtmlService.createTemplateFromFile('Index')
-    .evaluate()
-    .setTitle('Carvo Book')
-    .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
+  return ContentService
+    .createTextOutput(JSON.stringify({ status: 'Carvo Book online' }))
+    .setMimeType(ContentService.MimeType.JSON);
 }
 
-function include(filename) {
-  return HtmlService.createHtmlOutputFromFile(filename).getContent();
+// ============================================================
+// doPost — recebe transcrição do GitHub Pages
+// ============================================================
+function doPost(e) {
+  try {
+    const dados = JSON.parse(e.postData.contents);
+
+    if (!dados.transcricao) {
+      throw new Error('Transcrição não enviada.');
+    }
+
+    const relatorio = processarTranscricao(dados.transcricao);
+    const resultado = salvarEEnviar(dados.transcricao, relatorio);
+
+    return ContentService
+      .createTextOutput(JSON.stringify({
+        sucesso: true,
+        relatorio: relatorio,
+        sheetUrl: resultado.sheetUrl
+      }))
+      .setMimeType(ContentService.MimeType.JSON);
+
+  } catch (err) {
+    return ContentService
+      .createTextOutput(JSON.stringify({ sucesso: false, erro: err.message }))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
 }
 
 // ============================================================
@@ -128,7 +152,6 @@ function salvarNoSheets(relatorio, transcricao, dataHora) {
   aba.getRange(linha, 1, 1, 7).setWrap(true).setVerticalAlignment('top');
   aba.setRowHeight(linha, 130);
 
-  // Linha alternada
   if (linha % 2 === 0) {
     aba.getRange(linha, 1, 1, 7).setBackground('#f1f3f4');
   }
