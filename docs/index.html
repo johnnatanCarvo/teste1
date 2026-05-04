@@ -477,8 +477,8 @@ Retorne APENAS um JSON válido, sem markdown, com esta estrutura exata:
       );
 
       if (!resp.ok) {
-        const err = await resp.json();
-        throw new Error(err.error?.message || 'Erro na API Gemini (status ' + resp.status + ')');
+        const err = await resp.json().catch(() => ({}));
+        throw new Error(err.error?.message || 'Status ' + resp.status + ' — verifique a chave e tente novamente.');
       }
 
       const dados = await resp.json();
@@ -492,11 +492,7 @@ Retorne APENAS um JSON válido, sem markdown, com esta estrutura exata:
 
     } catch (e) {
       document.getElementById('btnGerar').disabled = false;
-      if (e.message.includes('API key')) {
-        mostrarStatus('Chave inválida. Verifique a chave Gemini nas configurações.', 'erro');
-      } else {
-        mostrarStatus('Erro: ' + e.message, 'erro');
-      }
+      mostrarStatus('Erro da API: <strong>' + e.message + '</strong><br><small>Verifique se a chave está correta e se não tem restrições de domínio no Google Cloud Console.</small>', 'erro');
     }
   }
 
