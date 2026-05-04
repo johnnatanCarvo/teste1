@@ -178,15 +178,16 @@
       gap: 6px;
     }
     .secao ul { padding-left: 18px; font-size: 14px; line-height: 1.75; color: #444; }
-    .resumo-box {
+    .resumo-box, .texto-secao {
       font-size: 14px;
-      line-height: 1.7;
+      line-height: 1.8;
       color: #444;
       background: #f8f9fa;
       padding: 11px 14px;
       border-radius: 8px;
-      border-left: 4px solid #1a73e8;
     }
+    .resumo-box  { border-left: 4px solid #1a73e8; }
+    .texto-secao { border-left: 4px solid #ddd; background: #fafafa; }
     .s1 h3 { color: #1a73e8; }
     .s2 h3 { color: #34a853; }
     .s3 h3 { color: #f57c00; }
@@ -452,18 +453,20 @@
 
     const prompt = `Você é um assistente especializado em análise de reuniões de negócios em português brasileiro.
 
-Analise a transcrição abaixo e gere um relatório estruturado com:
-1. RESUMO EXECUTIVO — síntese clara em 3 a 5 linhas
-2. PONTOS DISCUTIDOS — principais temas abordados
-3. DECISÕES TOMADAS — o que foi definido ou acordado
-4. PRÓXIMOS PASSOS — ações concretas (com responsável se mencionado)
-5. SUGESTÕES DA IA — recomendações estratégicas baseadas no conteúdo
+Analise a transcrição abaixo e gere um relatório completo. Escreva cada seção em texto corrido, como parágrafos bem redigidos — não use listas com traços ou marcadores, exceto em "proximos_passos" que deve ser uma lista de ações objetivas.
+
+Seções:
+1. RESUMO EXECUTIVO — parágrafo de 3 a 5 linhas sintetizando a reunião de forma clara e direta.
+2. PONTOS DISCUTIDOS — parágrafo descrevendo os temas abordados, com contexto e conexão entre eles.
+3. DECISÕES TOMADAS — parágrafo explicando o que foi decidido, o motivo e o impacto esperado.
+4. PRÓXIMOS PASSOS — lista de ações concretas a executar (com responsável se mencionado).
+5. SUGESTÕES DA IA — parágrafo com recomendações estratégicas e oportunidades identificadas com base na reunião.
 
 Transcrição:
 ${transcricao}
 
 Retorne APENAS um JSON válido, sem markdown, com esta estrutura exata:
-{"resumo":"...","pontos_discutidos":["..."],"decisoes":["..."],"proximos_passos":["..."],"sugestoes_ia":["..."]}`;
+{"resumo":"parágrafo...","pontos_discutidos":"parágrafo...","decisoes":"parágrafo...","proximos_passos":["ação 1","ação 2"],"sugestoes_ia":"parágrafo..."}`;
 
     try {
       const resp = await fetch(
@@ -521,19 +524,19 @@ Retorne APENAS um JSON válido, sem markdown, com esta estrutura exata:
       </div>
       <div class="secao s2">
         <h3>💬 Pontos Discutidos</h3>
-        <ul>${li(r.pontos_discutidos)}</ul>
+        <p class="texto-secao">${r.pontos_discutidos}</p>
       </div>
       <div class="secao s3">
         <h3>✅ Decisões Tomadas</h3>
-        <ul>${li(r.decisoes)}</ul>
+        <p class="texto-secao">${r.decisoes}</p>
       </div>
       <div class="secao s4">
         <h3>🚀 Próximos Passos</h3>
-        <ul>${li(r.proximos_passos)}</ul>
+        <ul>${li(Array.isArray(r.proximos_passos) ? r.proximos_passos : [r.proximos_passos])}</ul>
       </div>
       <div class="secao s5">
         <h3>💡 Sugestões da IA</h3>
-        <ul>${li(r.sugestoes_ia)}</ul>
+        <p class="texto-secao">${r.sugestoes_ia}</p>
       </div>
     `;
     document.getElementById('resultado').style.display = 'block';
@@ -553,22 +556,22 @@ ${r.resumo}
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 PONTOS DISCUTIDOS
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-${r.pontos_discutidos.map((p,i)=>`${i+1}. ${p}`).join('\n')}
+${r.pontos_discutidos}
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 DECISÕES TOMADAS
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-${r.decisoes.map((d,i)=>`${i+1}. ${d}`).join('\n')}
+${r.decisoes}
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 PRÓXIMOS PASSOS
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-${r.proximos_passos.map((p,i)=>`${i+1}. ${p}`).join('\n')}
+${(Array.isArray(r.proximos_passos) ? r.proximos_passos : [r.proximos_passos]).map((p,i)=>`${i+1}. ${p}`).join('\n')}
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 SUGESTÕES DA IA
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-${r.sugestoes_ia.map((s,i)=>`${i+1}. ${s}`).join('\n')}
+${r.sugestoes_ia}
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 TRANSCRIÇÃO COMPLETA
