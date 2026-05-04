@@ -234,11 +234,10 @@
   <h2>⚙️ Configuração inicial</h2>
 
   <div class="campo-setup">
-    <label>Token do Hugging Face (gratuito)</label>
-    <input type="password" id="cfgChave" placeholder="hf_...">
+    <label>Chave da API Groq (gratuita, sem cartão)</label>
+    <input type="password" id="cfgChave" placeholder="gsk_...">
     <small>
-      Crie gratuitamente em <strong>huggingface.co</strong> →
-      Settings → Access Tokens → <strong>New token</strong> (tipo: Read) → sem cartão
+      Crie em <strong>console.groq.com</strong> → API Keys → <strong>Create API Key</strong> → sem cartão
     </small>
   </div>
 
@@ -467,12 +466,8 @@ Retorne APENAS um JSON válido, sem markdown, com esta estrutura exata:
 {"resumo":"...","pontos_discutidos":["..."],"decisoes":["..."],"proximos_passos":["..."],"sugestoes_ia":["..."]}`;
 
     try {
-      // Endpoint padrão da Inference API — tem CORS habilitado para browsers
-      const promptFormatado =
-        `<|system|>\nVocê é um assistente especializado em análise de reuniões de negócios em português brasileiro.</s>\n<|user|>\n${prompt}</s>\n<|assistant|>\n`;
-
       const resp = await fetch(
-        'https://api-inference.huggingface.co/models/HuggingFaceH4/zephyr-7b-beta',
+        'https://api.groq.com/openai/v1/chat/completions',
         {
           method: 'POST',
           headers: {
@@ -480,30 +475,24 @@ Retorne APENAS um JSON válido, sem markdown, com esta estrutura exata:
             'Content-Type': 'application/json'
           },
           body: JSON.stringify({
-            inputs: promptFormatado,
-            parameters: {
-              max_new_tokens: 1500,
-              temperature: 0.2,
-              return_full_text: false,
-              do_sample: true
-            }
+            model: 'llama-3.1-8b-instant',
+            messages: [{ role: 'user', content: prompt }],
+            temperature: 0.2,
+            max_tokens: 2048
           })
         }
       );
 
       if (!resp.ok) {
         const err = await resp.json().catch(() => ({}));
-        const msg = err.error || ('Status ' + resp.status);
-        if (resp.status === 401) throw new Error('Token inválido. Verifique o token do Hugging Face nas configurações.');
-        if (resp.status === 503) throw new Error('Modelo carregando (cold start). Aguarde 30 segundos e tente novamente.');
+        const msg = err.error?.message || ('Status ' + resp.status);
+        if (resp.status === 401) throw new Error('Chave inválida. Verifique a chave Groq nas configurações.');
+        if (resp.status === 429) throw new Error('Limite de requisições atingido. Aguarde 1 minuto e tente novamente.');
         throw new Error(msg);
       }
 
       const dados = await resp.json();
-      // Resposta formato: [{"generated_text": "..."}]
-      const texto = Array.isArray(dados) ? dados[0].generated_text : dados.generated_text;
-      if (!texto) throw new Error('Resposta vazia da IA. Tente novamente.');
-
+      const texto = dados.choices[0].message.content;
       const limpo = texto.replace(/```json\n?/g,'').replace(/```\n?/g,'').trim();
       const match = limpo.match(/\{[\s\S]*\}/);
       if (!match) throw new Error('A IA não retornou formato JSON válido. Tente novamente.');
