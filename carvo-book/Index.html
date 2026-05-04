@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Carvo Book</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: #f0f2f5;
+      min-height: 100vh;
+      padding: 20px;
+      color: #333;
+    }
+
+    /* CABEÇALHO */
+    header {
+      background: #1a73e8;
+      color: white;
+      padding: 18px 24px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      box-shadow: 0 2px 8px rgba(26,115,232,.3);
+    }
+    header h1 { font-size: 22px; font-weight: 700; }
+    header span { font-size: 13px; opacity: .85; margin-top: 2px; }
+
+    /* CARDS */
+    .card {
+      background: white;
+      border-radius: 10px;
+      padding: 20px 24px;
+      margin-bottom: 16px;
+      box-shadow: 0 1px 4px rgba(0,0,0,.08);
+    }
+    .card h2 {
+      font-size: 15px;
+      font-weight: 600;
+      color: #1a73e8;
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* BOTÕES */
+    .btn {
+      padding: 11px 22px;
+      border: none;
+      border-radius: 7px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all .18s;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .btn:disabled { opacity: .5; cursor: not-allowed; }
+    .btn-gravar   { background: #ea4335; color: white; }
+    .btn-gravar:hover:not(:disabled)  { background: #c62828; }
+    .btn-parar    { background: #f57c00; color: white; }
+    .btn-parar:hover:not(:disabled)   { background: #e65100; }
+    .btn-gerar    { background: #34a853; color: white; }
+    .btn-gerar:hover:not(:disabled)   { background: #2e7d32; }
+    .btn-limpar   { background: #f1f3f4; color: #555; }
+    .btn-limpar:hover:not(:disabled)  { background: #e0e0e0; }
+
+    .botoes { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 14px; }
+
+    /* INDICADOR DE GRAVAÇÃO */
+    .status-gravando {
+      display: none;
+      align-items: center;
+      gap: 8px;
+      color: #ea4335;
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 10px;
+    }
+    .status-gravando.ativo { display: flex; }
+    .pulse {
+      width: 10px; height: 10px;
+      background: #ea4335;
+      border-radius: 50%;
+      animation: pulsar 1s infinite;
+    }
+    @keyframes pulsar {
+      0%,100% { opacity: 1; transform: scale(1); }
+      50%      { opacity: .4; transform: scale(.7); }
+    }
+
+    /* ÁREA DE TRANSCRIÇÃO */
+    #transcricao {
+      width: 100%;
+      min-height: 140px;
+      max-height: 260px;
+      overflow-y: auto;
+      border: 1.5px solid #e0e0e0;
+      border-radius: 7px;
+      padding: 12px 14px;
+      font-size: 14px;
+      line-height: 1.6;
+      resize: vertical;
+      background: #fafafa;
+      color: #333;
+    }
+    #transcricao:focus { outline: none; border-color: #1a73e8; background: white; }
+
+    .contador {
+      font-size: 12px;
+      color: #888;
+      text-align: right;
+      margin-top: 6px;
+    }
+
+    /* STATUS GERAL */
+    #status {
+      padding: 10px 14px;
+      border-radius: 7px;
+      font-size: 13px;
+      font-weight: 500;
+      display: none;
+    }
+    #status.info     { display: block; background: #e8f0fe; color: #1a73e8; }
+    #status.sucesso  { display: block; background: #e6f4ea; color: #2e7d32; }
+    #status.erro     { display: block; background: #fce8e6; color: #c62828; }
+    #status.carregando { display: block; background: #fff8e1; color: #e65100; }
+
+    /* RESULTADO */
+    #resultado { display: none; }
+    #resultado h3 {
+      font-size: 14px;
+      font-weight: 700;
+      margin: 14px 0 6px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    #resultado ul {
+      padding-left: 18px;
+      font-size: 14px;
+      line-height: 1.7;
+      color: #444;
+    }
+    #resultado p.resumo-texto {
+      font-size: 14px;
+      line-height: 1.7;
+      color: #444;
+      background: #f8f9fa;
+      padding: 10px 14px;
+      border-radius: 7px;
+      border-left: 4px solid #1a73e8;
+    }
+
+    .secao { margin-bottom: 16px; }
+    .secao-executivo h3 { color: #1a73e8; }
+    .secao-pontos    h3 { color: #34a853; }
+    .secao-decisoes  h3 { color: #f57c00; }
+    .secao-passos    h3 { color: #ea4335; }
+    .secao-sugestoes h3 { color: #9c27b0; }
+
+    /* SPINNER */
+    .spinner {
+      display: inline-block;
+      width: 16px; height: 16px;
+      border: 2px solid #f3a500;
+      border-top-color: transparent;
+      border-radius: 50%;
+      animation: girar .7s linear infinite;
+      vertical-align: middle;
+      margin-right: 6px;
+    }
+    @keyframes girar { to { transform: rotate(360deg); } }
+
+    /* LINK PLANILHA */
+    #linkPlanilha {
+      display: none;
+      margin-top: 14px;
+      padding: 10px 14px;
+      background: #e8f0fe;
+      border-radius: 7px;
+      font-size: 13px;
+      color: #1a73e8;
+    }
+    #linkPlanilha a { color: #1a73e8; font-weight: 600; }
+
+    /* AVISO CHROME */
+    #avisoChrome {
+      display: none;
+      padding: 12px 16px;
+      background: #fff3e0;
+      border: 1.5px solid #f57c00;
+      border-radius: 8px;
+      color: #e65100;
+      font-size: 13px;
+      margin-bottom: 16px;
+    }
+
+    @media (max-width: 500px) {
+      .botoes { flex-direction: column; }
+      .btn { justify-content: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div>
+      <h1>Carvo Book</h1>
+      <span>Transcrição e análise inteligente de reuniões</span>
+    </div>
+  </header>
+
+  <!-- Aviso se não for Chrome -->
+  <div id="avisoChrome">
+    ⚠️ A captura de voz funciona melhor no <strong>Google Chrome</strong>. Se estiver em outro navegador, use o campo de texto para colar a transcrição manualmente.
+  </div>
+
+  <!-- GRAVAÇÃO -->
+  <div class="card">
+    <h2>🎙️ Gravação da Reunião</h2>
+
+    <div class="status-gravando" id="statusGravando">
+      <div class="pulse"></div> Gravando... fale normalmente
+    </div>
+
+    <div class="botoes">
+      <button class="btn btn-gravar"  id="btnGravar"  onclick="iniciarGravacao()">🎙️ Iniciar Gravação</button>
+      <button class="btn btn-parar"   id="btnParar"   onclick="pararGravacao()" disabled>⏹️ Parar</button>
+      <button class="btn btn-limpar"  id="btnLimpar"  onclick="limparTudo()">🗑️ Limpar</button>
+    </div>
+
+    <textarea id="transcricao" placeholder="A transcrição da reunião aparecerá aqui automaticamente...&#10;&#10;Você também pode digitar ou colar o texto manualmente."></textarea>
+    <div class="contador" id="contador">0 palavras</div>
+  </div>
+
+  <!-- GERAÇÃO DO RELATÓRIO -->
+  <div class="card">
+    <h2>📊 Relatório</h2>
+
+    <div id="status"></div>
+
+    <div class="botoes" style="margin-top:10px">
+      <button class="btn btn-gerar" id="btnGerar" onclick="gerarRelatorio()">✨ Gerar Relatório</button>
+    </div>
+
+    <div id="linkPlanilha">
+      📄 Relatório salvo! <a id="urlPlanilha" href="#" target="_blank">Abrir no Google Sheets</a> &mdash; verifique também seu e-mail.
+    </div>
+
+    <div id="resultado"></div>
+  </div>
+
+  <script>
+    let reconhecimento = null;
+    let transcricaoAcumulada = '';
+    let gravando = false;
+
+    // Verifica suporte ao Speech Recognition
+    const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SpeechRec) {
+      document.getElementById('avisoChrome').style.display = 'block';
+    }
+
+    function iniciarGravacao() {
+      if (!SpeechRec) {
+        mostrarStatus('Seu navegador não suporta reconhecimento de voz. Cole o texto manualmente.', 'erro');
+        return;
+      }
+
+      reconhecimento = new SpeechRec();
+      reconhecimento.lang = 'pt-BR';
+      reconhecimento.continuous = true;
+      reconhecimento.interimResults = true;
+      reconhecimento.maxAlternatives = 1;
+
+      reconhecimento.onstart = function() {
+        gravando = true;
+        document.getElementById('statusGravando').classList.add('ativo');
+        document.getElementById('btnGravar').disabled = true;
+        document.getElementById('btnParar').disabled = false;
+      };
+
+      reconhecimento.onresult = function(evento) {
+        let interino = '';
+        let final = '';
+
+        for (let i = evento.resultIndex; i < evento.results.length; i++) {
+          const texto = evento.results[i][0].transcript;
+          if (evento.results[i].isFinal) {
+            final += texto + ' ';
+          } else {
+            interino += texto;
+          }
+        }
+
+        if (final) transcricaoAcumulada += final;
+
+        const campo = document.getElementById('transcricao');
+        campo.value = transcricaoAcumulada + interino;
+        campo.scrollTop = campo.scrollHeight;
+        atualizarContador();
+      };
+
+      reconhecimento.onerror = function(evento) {
+        if (evento.error === 'not-allowed') {
+          mostrarStatus('Acesso ao microfone negado. Permita o microfone no navegador.', 'erro');
+        } else if (evento.error !== 'no-speech') {
+          mostrarStatus('Erro no microfone: ' + evento.error, 'erro');
+        }
+      };
+
+      // Reinicia automaticamente para sessões longas
+      reconhecimento.onend = function() {
+        if (gravando) reconhecimento.start();
+      };
+
+      reconhecimento.start();
+    }
+
+    function pararGravacao() {
+      gravando = false;
+      if (reconhecimento) reconhecimento.stop();
+      document.getElementById('statusGravando').classList.remove('ativo');
+      document.getElementById('btnGravar').disabled = false;
+      document.getElementById('btnParar').disabled = true;
+      transcricaoAcumulada = document.getElementById('transcricao').value;
+    }
+
+    function limparTudo() {
+      pararGravacao();
+      transcricaoAcumulada = '';
+      document.getElementById('transcricao').value = '';
+      document.getElementById('resultado').style.display = 'none';
+      document.getElementById('linkPlanilha').style.display = 'none';
+      document.getElementById('status').className = '';
+      document.getElementById('status').innerHTML = '';
+      atualizarContador();
+    }
+
+    function atualizarContador() {
+      const texto = document.getElementById('transcricao').value.trim();
+      const palavras = texto ? texto.split(/\s+/).length : 0;
+      document.getElementById('contador').textContent = palavras + ' palavra' + (palavras !== 1 ? 's' : '');
+    }
+
+    document.getElementById('transcricao').addEventListener('input', atualizarContador);
+
+    function gerarRelatorio() {
+      const transcricao = document.getElementById('transcricao').value.trim();
+
+      if (!transcricao || transcricao.length < 20) {
+        mostrarStatus('Grave a reunião ou cole o texto antes de gerar o relatório.', 'erro');
+        return;
+      }
+
+      document.getElementById('btnGerar').disabled = true;
+      document.getElementById('resultado').style.display = 'none';
+      document.getElementById('linkPlanilha').style.display = 'none';
+      mostrarStatus('<span class="spinner"></span> Analisando a reunião com IA...', 'carregando');
+
+      google.script.run
+        .withSuccessHandler(function(relatorio) {
+          mostrarStatus('<span class="spinner"></span> Salvando no Google Sheets e enviando e-mail...', 'carregando');
+
+          google.script.run
+            .withSuccessHandler(function(resultado) {
+              document.getElementById('btnGerar').disabled = false;
+              mostrarStatus('✅ Relatório gerado, salvo e enviado por e-mail com sucesso!', 'sucesso');
+              exibirRelatorio(relatorio);
+
+              if (resultado.sheetUrl) {
+                document.getElementById('urlPlanilha').href = resultado.sheetUrl;
+                document.getElementById('linkPlanilha').style.display = 'block';
+              }
+            })
+            .withFailureHandler(function(erro) {
+              document.getElementById('btnGerar').disabled = false;
+              mostrarStatus('Erro ao salvar: ' + erro.message, 'erro');
+            })
+            .salvarEEnviar(transcricao, relatorio);
+        })
+        .withFailureHandler(function(erro) {
+          document.getElementById('btnGerar').disabled = false;
+          mostrarStatus('Erro na análise: ' + erro.message, 'erro');
+        })
+        .processarTranscricao(transcricao);
+    }
+
+    function exibirRelatorio(r) {
+      const el = document.getElementById('resultado');
+
+      el.innerHTML = `
+        <hr style="border:none;border-top:1.5px solid #f0f0f0;margin:18px 0">
+
+        <div class="secao secao-executivo">
+          <h3>📋 Resumo Executivo</h3>
+          <p class="resumo-texto">${r.resumo}</p>
+        </div>
+
+        <div class="secao secao-pontos">
+          <h3>💬 Pontos Discutidos</h3>
+          <ul>${r.pontos_discutidos.map(i => `<li>${i}</li>`).join('')}</ul>
+        </div>
+
+        <div class="secao secao-decisoes">
+          <h3>✅ Decisões Tomadas</h3>
+          <ul>${r.decisoes.map(i => `<li>${i}</li>`).join('')}</ul>
+        </div>
+
+        <div class="secao secao-passos">
+          <h3>🚀 Próximos Passos</h3>
+          <ul>${r.proximos_passos.map(i => `<li>${i}</li>`).join('')}</ul>
+        </div>
+
+        <div class="secao secao-sugestoes">
+          <h3>💡 Sugestões da IA</h3>
+          <ul>${r.sugestoes_ia.map(i => `<li>${i}</li>`).join('')}</ul>
+        </div>
+      `;
+
+      el.style.display = 'block';
+      el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    function mostrarStatus(msg, tipo) {
+      const el = document.getElementById('status');
+      el.innerHTML = msg;
+      el.className = tipo;
+    }
+  </script>
+</body>
+</html>
