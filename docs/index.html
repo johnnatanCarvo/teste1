@@ -234,9 +234,12 @@
   <h2>⚙️ Configuração inicial</h2>
 
   <div class="campo-setup">
-    <label>Chave da API Gemini (gratuita)</label>
-    <input type="password" id="cfgChave" placeholder="Cole sua chave aqui">
-    <small>Obtenha gratuitamente em <strong>aistudio.google.com</strong> → Get API Key</small>
+    <label>Token do Hugging Face (gratuito)</label>
+    <input type="password" id="cfgChave" placeholder="hf_...">
+    <small>
+      Crie gratuitamente em <strong>huggingface.co</strong> →
+      Settings → Access Tokens → <strong>New token</strong> (tipo: Read) → sem cartão
+    </small>
   </div>
 
   <div class="campo-setup">
@@ -465,26 +468,39 @@ Retorne APENAS um JSON válido, sem markdown, com esta estrutura exata:
 
     try {
       const resp = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${cfg.chave}`,
+        'https://api-inference.huggingface.co/models/HuggingFaceH4/zephyr-7b-beta/v1/chat/completions',
         {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: {
+            'Authorization': 'Bearer ' + cfg.chave,
+            'Content-Type': 'application/json'
+          },
           body: JSON.stringify({
-            contents: [{ parts: [{ text: prompt }] }],
-            generationConfig: { temperature: 0.2, maxOutputTokens: 2048 }
+            model: 'HuggingFaceH4/zephyr-7b-beta',
+            messages: [{ role: 'user', content: prompt }],
+            max_tokens: 1500,
+            temperature: 0.2,
+            stream: false
           })
         }
       );
 
       if (!resp.ok) {
         const err = await resp.json().catch(() => ({}));
-        throw new Error(err.error?.message || 'Status ' + resp.status + ' — verifique a chave e tente novamente.');
+        const msg = err.error || err.message || ('Status ' + resp.status);
+        if (resp.status === 401) throw new Error('Token inválido. Verifique o token do Hugging Face.');
+        if (resp.status === 503) throw new Error('Modelo carregando (cold start). Aguarde 30 segundos e tente novamente.');
+        throw new Error(msg);
       }
 
       const dados = await resp.json();
-      const texto = dados.candidates[0].content.parts[0].text;
+      const texto = dados.choices[0].message.content;
       const limpo = texto.replace(/```json\n?/g,'').replace(/```\n?/g,'').trim();
-      const rel = JSON.parse(limpo);
+
+      // Extrai o JSON mesmo que venha com texto antes ou depois
+      const match = limpo.match(/\{[\s\S]*\}/);
+      if (!match) throw new Error('A IA não retornou um formato válido. Tente novamente.');
+      const rel = JSON.parse(match[0]);
 
       document.getElementById('btnGerar').disabled = false;
       mostrarStatus('✅ Relatório gerado com sucesso!', 'sucesso');
@@ -492,14 +508,7 @@ Retorne APENAS um JSON válido, sem markdown, com esta estrutura exata:
 
     } catch (e) {
       document.getElementById('btnGerar').disabled = false;
-      let msg = 'Erro da API: <strong>' + e.message + '</strong>';
-      if (e.message.includes('cota') || e.message.includes('quota') || e.message.includes('limit')) {
-        msg = '⚠️ <strong>Cota excedida ou chave sem free tier.</strong><br>' +
-          'Sua chave foi criada pelo Cloud Console com billing ativo — isso bloqueia o free tier.<br><br>' +
-          '<strong>Solução:</strong> Crie uma nova chave em <a href="https://aistudio.google.com/apikey" target="_blank">aistudio.google.com/apikey</a> ' +
-          '(sem billing, free tier automático) e cole nas configurações.';
-      }
-      mostrarStatus(msg, 'erro');
+      mostrarStatus('Erro: <strong>' + e.message + '</strong>', 'erro');
     }
   }
 
