@@ -465,7 +465,7 @@ Retorne APENAS um JSON válido, sem markdown, com esta estrutura exata:
 
     try {
       const resp = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${cfg.chave}`,
+        `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${cfg.chave}`,
         {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -492,7 +492,14 @@ Retorne APENAS um JSON válido, sem markdown, com esta estrutura exata:
 
     } catch (e) {
       document.getElementById('btnGerar').disabled = false;
-      mostrarStatus('Erro da API: <strong>' + e.message + '</strong><br><small>Verifique se a chave está correta e se não tem restrições de domínio no Google Cloud Console.</small>', 'erro');
+      let msg = 'Erro da API: <strong>' + e.message + '</strong>';
+      if (e.message.includes('cota') || e.message.includes('quota') || e.message.includes('limit')) {
+        msg = '⚠️ <strong>Cota excedida ou chave sem free tier.</strong><br>' +
+          'Sua chave foi criada pelo Cloud Console com billing ativo — isso bloqueia o free tier.<br><br>' +
+          '<strong>Solução:</strong> Crie uma nova chave em <a href="https://aistudio.google.com/apikey" target="_blank">aistudio.google.com/apikey</a> ' +
+          '(sem billing, free tier automático) e cole nas configurações.';
+      }
+      mostrarStatus(msg, 'erro');
     }
   }
 
