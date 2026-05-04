@@ -451,22 +451,38 @@
     document.getElementById('acoesResultado').style.display = 'none';
     mostrarStatus('<span class="spinner"></span> Analisando com IA...', 'carregando');
 
-    const prompt = `Você é um assistente especializado em análise de reuniões de negócios em português brasileiro.
+    const prompt = `Você é um consultor empresarial sênior especializado em gestão, estratégia e análise de reuniões corporativas em português brasileiro. Seu trabalho é transformar transcrições brutas de reuniões em relatórios executivos completos, profissionais e de alto valor analítico.
 
-Analise a transcrição abaixo e gere um relatório completo. Escreva cada seção em texto corrido, como parágrafos bem redigidos — não use listas com traços ou marcadores, exceto em "proximos_passos" que deve ser uma lista de ações objetivas.
+Analise a transcrição abaixo com profundidade e gere um relatório executivo detalhado. Cada seção deve ser escrita em texto corrido, com linguagem formal, clara e orientada a negócios. Seja específico — cite dados, nomes e situações mencionados na reunião quando disponíveis.
 
-Seções:
-1. RESUMO EXECUTIVO — parágrafo de 3 a 5 linhas sintetizando a reunião de forma clara e direta.
-2. PONTOS DISCUTIDOS — parágrafo descrevendo os temas abordados, com contexto e conexão entre eles.
-3. DECISÕES TOMADAS — parágrafo explicando o que foi decidido, o motivo e o impacto esperado.
-4. PRÓXIMOS PASSOS — lista de ações concretas a executar (com responsável se mencionado).
-5. SUGESTÕES DA IA — parágrafo com recomendações estratégicas e oportunidades identificadas com base na reunião.
+SEÇÕES DO RELATÓRIO:
+
+1. RESUMO EXECUTIVO
+Parágrafo denso de 5 a 8 linhas. Contextualize o propósito da reunião, os principais temas tratados, o tom geral da discussão e os resultados alcançados. Escreva como se fosse para um diretor que não participou da reunião.
+
+2. CONTEXTO E PAUTA
+Parágrafo explicando o contexto da reunião: por que ela ocorreu, quais eram as expectativas iniciais e qual era o problema ou oportunidade em discussão.
+
+3. ANÁLISE DOS TEMAS DISCUTIDOS
+Texto detalhado e analítico descrevendo cada tema abordado, com profundidade. Explique as posições, argumentos, divergências e convergências apresentadas pelos participantes. Mostre as conexões entre os temas.
+
+4. DECISÕES E DELIBERAÇÕES
+Texto formal descrevendo cada decisão tomada, com o racional por trás dela, quem foi responsável pela decisão e qual o impacto esperado para o negócio.
+
+5. PLANO DE AÇÃO
+Lista de ações concretas, objetivas e priorizadas. Cada item deve conter: a ação, o responsável (se mencionado) e o prazo (se mencionado).
+
+6. ANÁLISE ESTRATÉGICA E RECOMENDAÇÕES DA IA
+Parágrafo analítico profundo com: (a) avaliação crítica das decisões tomadas, (b) riscos identificados que merecem atenção, (c) oportunidades que podem ser exploradas, (d) recomendações estratégicas concretas para maximizar os resultados discutidos.
+
+7. PONTOS DE ATENÇÃO
+Parágrafo destacando riscos, inconsistências, temas não resolvidos ou pontos que precisam de acompanhamento próximo.
 
 Transcrição:
 ${transcricao}
 
-Retorne APENAS um JSON válido, sem markdown, com esta estrutura exata:
-{"resumo":"parágrafo...","pontos_discutidos":"parágrafo...","decisoes":"parágrafo...","proximos_passos":["ação 1","ação 2"],"sugestoes_ia":"parágrafo..."}`;
+Retorne APENAS um JSON válido, sem markdown, sem texto antes ou depois, com esta estrutura exata:
+{"resumo":"...","contexto":"...","temas_discutidos":"...","decisoes":"...","plano_acao":["ação 1 | Responsável: X | Prazo: Y","ação 2"],"analise_estrategica":"...","pontos_atencao":"..."}`;
 
     try {
       const resp = await fetch(
@@ -478,7 +494,7 @@ Retorne APENAS um JSON válido, sem markdown, com esta estrutura exata:
             'Content-Type': 'application/json'
           },
           body: JSON.stringify({
-            model: 'llama-3.1-8b-instant',
+            model: 'llama-3.3-70b-versatile',
             messages: [{ role: 'user', content: prompt }],
             temperature: 0.2,
             max_tokens: 2048
@@ -516,6 +532,7 @@ Retorne APENAS um JSON válido, sem markdown, com esta estrutura exata:
     const data = new Date().toLocaleString('pt-BR');
     const li = arr => arr.map(i => `<li>${i}</li>`).join('');
 
+    const passos = Array.isArray(r.plano_acao) ? r.plano_acao : [r.plano_acao];
     document.getElementById('resultado').innerHTML = `
       <hr>
       <div class="secao s1">
@@ -523,20 +540,28 @@ Retorne APENAS um JSON válido, sem markdown, com esta estrutura exata:
         <p class="resumo-box">${r.resumo}</p>
       </div>
       <div class="secao s2">
-        <h3>💬 Pontos Discutidos</h3>
-        <p class="texto-secao">${r.pontos_discutidos}</p>
+        <h3>🗂️ Contexto e Pauta</h3>
+        <p class="texto-secao">${r.contexto}</p>
+      </div>
+      <div class="secao s2">
+        <h3>💬 Análise dos Temas Discutidos</h3>
+        <p class="texto-secao">${r.temas_discutidos}</p>
       </div>
       <div class="secao s3">
-        <h3>✅ Decisões Tomadas</h3>
+        <h3>✅ Decisões e Deliberações</h3>
         <p class="texto-secao">${r.decisoes}</p>
       </div>
       <div class="secao s4">
-        <h3>🚀 Próximos Passos</h3>
-        <ul>${li(Array.isArray(r.proximos_passos) ? r.proximos_passos : [r.proximos_passos])}</ul>
+        <h3>🚀 Plano de Ação</h3>
+        <ul>${li(passos)}</ul>
       </div>
       <div class="secao s5">
-        <h3>💡 Sugestões da IA</h3>
-        <p class="texto-secao">${r.sugestoes_ia}</p>
+        <h3>💡 Análise Estratégica e Recomendações</h3>
+        <p class="texto-secao">${r.analise_estrategica}</p>
+      </div>
+      <div class="secao s5" style="border-left:3px solid #ea4335;padding-left:12px">
+        <h3 style="color:#ea4335">⚠️ Pontos de Atenção</h3>
+        <p class="texto-secao">${r.pontos_atencao}</p>
       </div>
     `;
     document.getElementById('resultado').style.display = 'block';
@@ -554,24 +579,34 @@ RESUMO EXECUTIVO
 ${r.resumo}
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-PONTOS DISCUTIDOS
+CONTEXTO E PAUTA
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-${r.pontos_discutidos}
+${r.contexto}
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-DECISÕES TOMADAS
+ANÁLISE DOS TEMAS DISCUTIDOS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+${r.temas_discutidos}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+DECISÕES E DELIBERAÇÕES
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ${r.decisoes}
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-PRÓXIMOS PASSOS
+PLANO DE AÇÃO
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-${(Array.isArray(r.proximos_passos) ? r.proximos_passos : [r.proximos_passos]).map((p,i)=>`${i+1}. ${p}`).join('\n')}
+${(Array.isArray(r.plano_acao) ? r.plano_acao : [r.plano_acao]).map((p,i)=>`${i+1}. ${p}`).join('\n')}
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-SUGESTÕES DA IA
+ANÁLISE ESTRATÉGICA E RECOMENDAÇÕES
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-${r.sugestoes_ia}
+${r.analise_estrategica}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+PONTOS DE ATENÇÃO
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+${r.pontos_atencao}
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 TRANSCRIÇÃO COMPLETA
