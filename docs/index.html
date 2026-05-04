@@ -502,46 +502,62 @@
     document.getElementById('acoesResultado').style.display = 'none';
     mostrarStatus('<span class="spinner"></span> Analisando com IA...', 'carregando');
 
-    const empresa = cfg.empresa ? `Empresa: ${cfg.empresa}.` : '';
+    const empresa = cfg.empresa || 'empresa';
 
-    const prompt = `Você é um consultor empresarial sênior especializado em gestão de negócios no varejo alimentar — restaurantes, redes de alimentação e food service. ${empresa} Sua missão é transformar transcrições de reuniões em relatórios executivos completos, analíticos e orientados à ação.
+    // REGRA CENTRAL: cada seção responde uma pergunta diferente — nenhuma repete informação de outra
+    const systemMsg = `Você é um consultor sênior de gestão para negócios de varejo alimentar (restaurantes, food service, redes de alimentação).
+Empresa analisada: ${empresa}.
 
-Analise a transcrição abaixo com profundidade. Escreva em linguagem formal, direta e orientada a resultados. Seja específico — cite dados, nomes, valores e situações mencionados na reunião quando disponíveis. Quando não houver dados suficientes para uma seção, indique o que deveria ser levantado.
+REGRAS ABSOLUTAS DE QUALIDADE — violá-las invalida o relatório:
+1. ZERO REPETIÇÃO: cada seção responde uma pergunta diferente. Se uma informação já foi dita, ela NÃO aparece em outra seção.
+2. ZERO GENERALIDADE: proibido usar frases como "é importante", "deve-se atentar", "é fundamental", "a equipe deve". Substitua por afirmações específicas com dados reais da transcrição.
+3. CITE O CONCRETO: use nomes, valores, percentuais, datas e situações exatas mencionadas na reunião. Se não existirem, diga explicitamente o que está faltando.
+4. ANÁLISE CRÍTICA REAL: aponte falhas, omissões e contradições na discussão. Não valide automaticamente o que foi dito.
+5. LINGUAGEM EXECUTIVA: direta, densa, sem rodeios. Cada frase deve entregar valor.`;
 
-SEÇÕES OBRIGATÓRIAS:
+    const userMsg = `Analise a transcrição abaixo e gere um relatório executivo. Cada seção tem uma função exclusiva — leia com atenção antes de escrever.
 
-1. RESUMO EXECUTIVO
-Parágrafo denso de 5 a 8 linhas para um gestor que não participou. Contextualize o propósito, principais temas, tom da discussão e resultados alcançados.
+SEÇÃO 1 — RESUMO EXECUTIVO
+Pergunta que responde: "O que aconteceu nesta reunião?"
+Escreva 1 parágrafo denso (6-8 linhas) para um diretor que não participou. Mencione: propósito real da reunião, o estado emocional/operacional do grupo, os 2-3 temas centrais e o resultado final. Não detalhe os temas — apenas sintetize.
 
-2. CONTEXTO OPERACIONAL
-Parágrafo explicando o contexto da reunião no negócio: qual problema, oportunidade ou decisão estava em pauta. Relacione ao ciclo do varejo alimentar quando aplicável (CMV, estoque, produção, equipe, vendas, financeiro).
+SEÇÃO 2 — DIAGNÓSTICO DA SITUAÇÃO
+Pergunta que responde: "Qual é o estado real do negócio com base no que foi revelado?"
+NÃO repita o que foi dito no resumo. Interprete os dados, comportamentos e preocupações da reunião para diagnosticar a situação atual do negócio: onde está saudável, onde está vulnerável, o que está sendo ignorado. Use indicadores de varejo alimentar quando aplicável (CMV, giro, perdas, margem).
 
-3. ANÁLISE DOS TEMAS DISCUTIDOS
-Texto detalhado e analítico. Descreva cada tema com profundidade: posições, argumentos, dados apresentados, divergências e conexões. Avalie a qualidade das discussões.
+SEÇÃO 3 — ANÁLISE CRÍTICA DAS DISCUSSÕES
+Pergunta que responde: "Como foi a qualidade da discussão? O que foi bem discutido e o que ficou raso?"
+NÃO liste o que foi discutido — isso é função das outras seções. Avalie: quais argumentos foram sólidos, quais foram superficiais, o que não foi questionado e deveria ter sido, que dados importantes estavam ausentes da conversa, e se as prioridades abordadas correspondem à realidade do negócio.
 
-4. DECISÕES E DELIBERAÇÕES
-Texto formal descrevendo cada decisão tomada, com racional, responsável e impacto esperado para o negócio.
+SEÇÃO 4 — DECISÕES E RACIONAL
+Pergunta que responde: "O que foi decidido, por quê, e essa decisão foi bem fundamentada?"
+NÃO repita discussões — só o que foi efetivamente decidido. Para cada decisão: descreva a decisão, avalie criticamente se o racional foi sólido ou frágil, e aponte o risco direto daquela decisão se for mal executada.
 
-5. PLANO DE AÇÃO
-Lista de ações priorizadas. Formato: "Ação | Responsável: X | Prazo: Y | Prioridade: Alta/Média/Baixa".
+SEÇÃO 5 — PLANO DE AÇÃO
+Pergunta que responde: "Quem faz o quê, quando e com que prioridade?"
+Lista de ações NOVAS — não mencione as decisões já listadas na seção 4. Formato obrigatório de cada item: "AÇÃO: [descrição objetiva] | RESPONSÁVEL: [nome ou cargo] | PRAZO: [data ou período] | PRIORIDADE: [Alta/Média/Baixa]". Se responsável ou prazo não foram mencionados, escreva "A definir".
 
-6. IMPACTO FINANCEIRO E OPERACIONAL
-Parágrafo analisando o impacto financeiro das decisões e discussões: efeitos sobre CMV, margem de contribuição, fluxo de caixa, estoque, perdas ou custos operacionais. Se não houver dados diretos, aponte o que deve ser monitorado.
+SEÇÃO 6 — IMPACTO FINANCEIRO
+Pergunta que responde: "Quais são as consequências financeiras concretas do que foi discutido e decidido?"
+NÃO repita as decisões. Calcule ou estime: impacto no CMV%, na margem bruta, no fluxo de caixa de curto prazo, no custo de estoque ou no índice de perdas. Se os dados não permitirem cálculo, especifique exatamente quais números precisam ser levantados para fazer essa análise.
 
-7. ANÁLISE ESTRATÉGICA E RECOMENDAÇÕES
-Parágrafo com: (a) avaliação crítica das decisões, (b) oportunidades identificadas, (c) recomendações concretas e priorizadas para maximizar resultados no varejo alimentar.
+SEÇÃO 7 — RECOMENDAÇÕES ESTRATÉGICAS
+Pergunta que responde: "O que o consultor recomenda fazer além do que já foi decidido?"
+NÃO repita decisões nem ações já listadas. Apresente recomendações originais baseadas no que foi revelado na reunião mas NÃO foi abordado adequadamente. Seja específico: cite a oportunidade, a ação recomendada e o resultado esperado em termos de negócio.
 
-8. INDICADORES A MONITORAR (KPIs)
-Lista de KPIs relevantes para acompanhar os resultados desta reunião. Exemplos: CMV%, ticket médio, giro de estoque, índice de perdas, margem bruta.
+SEÇÃO 8 — KPIs DE ACOMPANHAMENTO
+Pergunta que responde: "Como medir se as decisões desta reunião estão gerando resultado?"
+Liste apenas indicadores diretamente ligados ao que foi discutido nesta reunião. Para cada KPI: nome do indicador, meta sugerida (se possível inferir da conversa) e frequência de monitoramento.
 
-9. PONTOS DE ATENÇÃO E RISCOS
-Parágrafo destacando riscos, inconsistências, decisões precipitadas, temas não resolvidos ou pontos que exigem acompanhamento urgente.
+SEÇÃO 9 — RISCOS E PONTOS CEGOS
+Pergunta que responde: "O que pode dar errado e o que não foi discutido mas deveria ter sido?"
+NÃO repita pontos já mencionados nas seções anteriores. Foque em: riscos de execução das decisões tomadas, temas críticos para o negócio que ficaram de fora da pauta, e contradições entre o que foi dito e a realidade do mercado de varejo alimentar.
 
 Transcrição:
 ${transcricao}
 
-Retorne APENAS um JSON válido, sem markdown, sem texto antes ou depois:
-{"resumo":"...","contexto":"...","temas":"...","decisoes":"...","plano_acao":["..."],"impacto_financeiro":"...","analise_estrategica":"...","kpis":["..."],"pontos_atencao":"..."}`;
+Retorne APENAS um JSON válido, sem markdown, sem texto fora do JSON:
+{"resumo":"...","diagnostico":"...","analise_critica":"...","decisoes":"...","plano_acao":["AÇÃO: ... | RESPONSÁVEL: ... | PRAZO: ... | PRIORIDADE: ..."],"impacto_financeiro":"...","recomendacoes":"...","kpis":["KPI: ... | Meta: ... | Frequência: ..."],"riscos":"..."}`;
 
     try {
       const resp = await fetch('https://api.groq.com/openai/v1/chat/completions', {
@@ -549,9 +565,12 @@ Retorne APENAS um JSON válido, sem markdown, sem texto antes ou depois:
         headers: { 'Authorization': 'Bearer ' + cfg.chave, 'Content-Type': 'application/json' },
         body: JSON.stringify({
           model: 'llama-3.3-70b-versatile',
-          messages: [{ role: 'user', content: prompt }],
-          temperature: 0.2,
-          max_tokens: 3000
+          messages: [
+            { role: 'system', content: systemMsg },
+            { role: 'user',   content: userMsg   }
+          ],
+          temperature: 0.3,
+          max_tokens: 4000
         })
       });
 
@@ -597,15 +616,15 @@ Retorne APENAS um JSON válido, sem markdown, sem texto antes ou depois:
         <h2>Relatório Executivo de Reunião</h2>
         <p>${empresa} &mdash; ${data}</p>
       </div>
-      ${sec('Resumo Executivo',              't-resumo',     '📋', `<p>${r.resumo}</p>`)}
-      ${sec('Contexto Operacional',          't-contexto',   '🏪', `<p>${r.contexto}</p>`)}
-      ${sec('Análise dos Temas Discutidos',  't-temas',      '💬', `<p>${r.temas}</p>`)}
-      ${sec('Decisões e Deliberações',       't-decisoes',   '✅', `<p>${r.decisoes}</p>`)}
-      ${sec('Plano de Ação',                 't-acao',       '🚀', `<ul>${li(r.plano_acao)}</ul>`)}
-      ${sec('Impacto Financeiro e Operacional', 't-financeiro', '💰', `<p>${r.impacto_financeiro}</p>`)}
-      ${sec('Análise Estratégica e Recomendações', 't-estrategia', '💡', `<p>${r.analise_estrategica}</p>`)}
-      ${sec('Indicadores a Monitorar (KPIs)', 't-kpi',       '📈', `<ul>${li(r.kpis)}</ul>`)}
-      ${sec('Pontos de Atenção e Riscos',    't-atencao',    '⚠️', `<p>${r.pontos_atencao}</p>`)}
+      ${sec('Resumo Executivo',                    't-resumo',     '📋', `<p>${r.resumo}</p>`)}
+      ${sec('Diagnóstico da Situação',             't-contexto',   '🏪', `<p>${r.diagnostico}</p>`)}
+      ${sec('Análise Crítica das Discussões',      't-temas',      '💬', `<p>${r.analise_critica}</p>`)}
+      ${sec('Decisões e Racional',                 't-decisoes',   '✅', `<p>${r.decisoes}</p>`)}
+      ${sec('Plano de Ação',                       't-acao',       '🚀', `<ul>${li(r.plano_acao)}</ul>`)}
+      ${sec('Impacto Financeiro',                  't-financeiro', '💰', `<p>${r.impacto_financeiro}</p>`)}
+      ${sec('Recomendações Estratégicas',          't-estrategia', '💡', `<p>${r.recomendacoes}</p>`)}
+      ${sec('KPIs de Acompanhamento',              't-kpi',        '📈', `<ul>${li(r.kpis)}</ul>`)}
+      ${sec('Riscos e Pontos Cegos',               't-atencao',    '⚠️', `<p>${r.riscos}</p>`)}
     `;
 
     document.getElementById('resultado').style.display = 'block';
@@ -625,17 +644,17 @@ ${'═'.repeat(50)}
 ${r.resumo}
 
 ${'═'.repeat(50)}
-CONTEXTO OPERACIONAL
+DIAGNÓSTICO DA SITUAÇÃO
 ${'═'.repeat(50)}
-${r.contexto}
+${r.diagnostico}
 
 ${'═'.repeat(50)}
-ANÁLISE DOS TEMAS DISCUTIDOS
+ANÁLISE CRÍTICA DAS DISCUSSÕES
 ${'═'.repeat(50)}
-${r.temas}
+${r.analise_critica}
 
 ${'═'.repeat(50)}
-DECISÕES E DELIBERAÇÕES
+DECISÕES E RACIONAL
 ${'═'.repeat(50)}
 ${r.decisoes}
 
@@ -645,24 +664,24 @@ ${'═'.repeat(50)}
 ${liTxt(r.plano_acao)}
 
 ${'═'.repeat(50)}
-IMPACTO FINANCEIRO E OPERACIONAL
+IMPACTO FINANCEIRO
 ${'═'.repeat(50)}
 ${r.impacto_financeiro}
 
 ${'═'.repeat(50)}
-ANÁLISE ESTRATÉGICA E RECOMENDAÇÕES
+RECOMENDAÇÕES ESTRATÉGICAS
 ${'═'.repeat(50)}
-${r.analise_estrategica}
+${r.recomendacoes}
 
 ${'═'.repeat(50)}
-INDICADORES A MONITORAR (KPIs)
+KPIs DE ACOMPANHAMENTO
 ${'═'.repeat(50)}
 ${liTxt(r.kpis)}
 
 ${'═'.repeat(50)}
-PONTOS DE ATENÇÃO E RISCOS
+RISCOS E PONTOS CEGOS
 ${'═'.repeat(50)}
-${r.pontos_atencao}
+${r.riscos}
 
 ${'═'.repeat(50)}
 TRANSCRIÇÃO COMPLETA
