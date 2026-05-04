@@ -9,266 +9,252 @@
 
     :root {
       --carvo-dark:   #1a1a2e;
-      --carvo-mid:    #16213e;
       --carvo-accent: #e8a020;
-      --carvo-light:  #f5f5f0;
-      --carvo-text:   #2d2d2d;
-      --carvo-muted:  #6b7280;
+      --carvo-bg:     #f7f7f5;
+      --carvo-white:  #ffffff;
+      --carvo-text:   #1a1a1a;
+      --carvo-sub:    #6b7280;
       --carvo-border: #e5e7eb;
+      --carvo-hover:  #f3f4f6;
     }
 
     body {
-      font-family: 'Segoe UI', Arial, sans-serif;
-      background: var(--carvo-light);
+      font-family: 'Segoe UI', -apple-system, Arial, sans-serif;
+      background: var(--carvo-bg);
       min-height: 100vh;
       padding: 16px;
       color: var(--carvo-text);
+      font-size: 14px;
     }
 
     /* HEADER */
     header {
-      background: linear-gradient(135deg, var(--carvo-dark) 0%, var(--carvo-mid) 100%);
+      background: var(--carvo-dark);
       color: white;
-      padding: 20px 26px;
-      border-radius: 12px;
-      margin-bottom: 16px;
-      box-shadow: 0 4px 16px rgba(26,26,46,.3);
+      padding: 16px 22px;
+      border-radius: 10px;
+      margin-bottom: 14px;
       display: flex;
       align-items: center;
-      gap: 16px;
+      gap: 14px;
     }
     .logo-mark {
-      width: 44px; height: 44px;
+      width: 38px; height: 38px;
       background: var(--carvo-accent);
-      border-radius: 10px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 20px;
-      font-weight: 900;
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 14px; font-weight: 900;
       color: var(--carvo-dark);
-      flex-shrink: 0;
-      letter-spacing: -1px;
+      flex-shrink: 0; letter-spacing: -1px;
     }
-    header h1 { font-size: 20px; font-weight: 700; letter-spacing: .3px; }
-    header p  { font-size: 12px; opacity: .65; margin-top: 2px; }
+    header h1 { font-size: 17px; font-weight: 700; }
+    header p  { font-size: 11px; opacity: .55; margin-top: 2px; }
 
     /* SETUP */
     #setup {
-      background: white;
-      border: 2px solid var(--carvo-accent);
-      border-radius: 12px;
-      padding: 20px 24px;
-      margin-bottom: 16px;
+      background: var(--carvo-white);
+      border: 1.5px solid var(--carvo-accent);
+      border-radius: 10px;
+      padding: 18px 22px;
+      margin-bottom: 14px;
     }
-    #setup h2 { font-size: 14px; color: var(--carvo-dark); font-weight: 700; margin-bottom: 14px; }
-    .campo-setup { margin-bottom: 12px; }
-    .campo-setup label { display: block; font-size: 12px; font-weight: 600; margin-bottom: 5px; color: var(--carvo-muted); text-transform: uppercase; letter-spacing: .4px; }
-    .campo-setup input {
-      width: 100%;
-      padding: 9px 12px;
-      border: 1.5px solid var(--carvo-border);
-      border-radius: 7px;
-      font-size: 13px;
-      color: var(--carvo-text);
-    }
+    #setup h2 { font-size: 13px; font-weight: 700; color: var(--carvo-dark); margin-bottom: 12px; }
+    .campo-setup { margin-bottom: 10px; }
+    .campo-setup label { display: block; font-size: 11px; font-weight: 600; color: var(--carvo-sub); text-transform: uppercase; letter-spacing: .5px; margin-bottom: 4px; }
+    .campo-setup input { width: 100%; padding: 8px 11px; border: 1.5px solid var(--carvo-border); border-radius: 6px; font-size: 13px; color: var(--carvo-text); }
     .campo-setup input:focus { outline: none; border-color: var(--carvo-accent); }
-    .campo-setup small { display: block; margin-top: 4px; font-size: 11px; color: var(--carvo-muted); }
+    .campo-setup small { display: block; margin-top: 3px; font-size: 11px; color: var(--carvo-sub); }
 
     /* CARDS */
     .card {
-      background: white;
-      border-radius: 12px;
-      padding: 20px 24px;
-      margin-bottom: 14px;
-      box-shadow: 0 1px 4px rgba(0,0,0,.06);
+      background: var(--carvo-white);
+      border-radius: 10px;
+      padding: 18px 22px;
+      margin-bottom: 12px;
       border: 1px solid var(--carvo-border);
     }
     .card h2 {
-      font-size: 13px;
-      font-weight: 700;
-      color: var(--carvo-dark);
-      margin-bottom: 14px;
-      display: flex;
-      align-items: center;
-      gap: 7px;
-      text-transform: uppercase;
-      letter-spacing: .5px;
+      font-size: 12px; font-weight: 700;
+      color: var(--carvo-sub);
+      text-transform: uppercase; letter-spacing: .6px;
+      margin-bottom: 12px;
     }
 
     /* BOTÕES */
     .btn {
-      padding: 10px 18px;
-      border: none;
-      border-radius: 8px;
-      font-size: 13px;
-      font-weight: 600;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 7px;
-      transition: all .15s;
+      padding: 9px 16px; border: none; border-radius: 7px;
+      font-size: 13px; font-weight: 600; cursor: pointer;
+      display: inline-flex; align-items: center; gap: 6px;
+      transition: all .13s;
     }
     .btn:disabled { opacity: .4; cursor: not-allowed; }
     .btn:active:not(:disabled) { transform: scale(.97); }
 
     .btn-primary { background: var(--carvo-dark);   color: white; }
-    .btn-primary:hover:not(:disabled) { background: #0f0f1a; }
+    .btn-primary:hover:not(:disabled) { background: #0f0f1f; }
     .btn-accent  { background: var(--carvo-accent);  color: var(--carvo-dark); font-weight: 700; }
     .btn-accent:hover:not(:disabled)  { background: #d4911a; }
     .btn-danger  { background: #dc2626; color: white; }
     .btn-danger:hover:not(:disabled)  { background: #b91c1c; }
-    .btn-ghost   { background: #f3f4f6; color: #555; border: 1px solid var(--carvo-border); }
+    .btn-ghost   { background: var(--carvo-hover); color: #555; border: 1px solid var(--carvo-border); }
     .btn-ghost:hover:not(:disabled)   { background: #e5e7eb; }
 
-    .botoes { display: flex; gap: 9px; flex-wrap: wrap; }
+    .botoes { display: flex; gap: 8px; flex-wrap: wrap; }
 
     /* GRAVANDO */
     #barraGravando {
-      display: none;
-      align-items: center;
-      gap: 10px;
-      background: #fef2f2;
-      border: 1px solid #fecaca;
-      border-radius: 8px;
-      padding: 10px 14px;
-      margin-bottom: 12px;
-      font-size: 13px;
-      font-weight: 600;
-      color: #dc2626;
+      display: none; align-items: center; gap: 10px;
+      background: #fef2f2; border: 1px solid #fecaca;
+      border-radius: 7px; padding: 9px 13px; margin-bottom: 11px;
+      font-size: 13px; font-weight: 600; color: #dc2626;
     }
     #barraGravando.ativo { display: flex; }
     .pulse {
-      width: 10px; height: 10px;
-      background: #dc2626;
-      border-radius: 50%;
-      flex-shrink: 0;
+      width: 9px; height: 9px; background: #dc2626;
+      border-radius: 50%; flex-shrink: 0;
       animation: pulsar 1s infinite;
     }
-    @keyframes pulsar {
-      0%,100% { opacity:1; transform:scale(1); }
-      50%      { opacity:.3; transform:scale(.6); }
-    }
+    @keyframes pulsar { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.3;transform:scale(.6)} }
     #cronometro { margin-left: auto; font-variant-numeric: tabular-nums; font-weight: 700; }
 
     /* TEXTAREA */
     #transcricao {
-      width: 100%;
-      min-height: 130px;
-      max-height: 260px;
-      border: 1.5px solid var(--carvo-border);
-      border-radius: 8px;
-      padding: 12px 14px;
-      font-size: 14px;
-      line-height: 1.65;
-      resize: vertical;
-      background: #fafaf9;
-      color: var(--carvo-text);
-      font-family: inherit;
-      overflow-y: auto;
+      width: 100%; min-height: 120px; max-height: 240px;
+      border: 1.5px solid var(--carvo-border); border-radius: 7px;
+      padding: 11px 13px; font-size: 14px; line-height: 1.6;
+      resize: vertical; background: var(--carvo-bg);
+      color: var(--carvo-text); font-family: inherit; overflow-y: auto;
     }
     #transcricao:focus { outline: none; border-color: var(--carvo-accent); background: white; }
 
     .rodape-texto {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-top: 6px;
-      font-size: 11px;
-      color: var(--carvo-muted);
+      display: flex; justify-content: space-between; align-items: center;
+      margin-top: 5px; font-size: 11px; color: var(--carvo-sub);
     }
 
     /* STATUS */
     #status {
-      padding: 11px 14px;
-      border-radius: 8px;
-      font-size: 13px;
-      font-weight: 500;
-      margin-bottom: 12px;
-      display: none;
+      padding: 10px 13px; border-radius: 7px; font-size: 13px;
+      font-weight: 500; margin-bottom: 11px; display: none;
     }
-    #status.info       { display:block; background:#eff6ff; color:#1d4ed8; border:1px solid #bfdbfe; }
-    #status.sucesso    { display:block; background:#f0fdf4; color:#15803d; border:1px solid #bbf7d0; }
-    #status.erro       { display:block; background:#fef2f2; color:#dc2626; border:1px solid #fecaca; }
-    #status.carregando { display:block; background:#fffbeb; color:#b45309; border:1px solid #fde68a; }
+    #status.info      { display:block; background:#eff6ff; color:#1d4ed8; border:1px solid #bfdbfe; }
+    #status.sucesso   { display:block; background:#f0fdf4; color:#15803d; border:1px solid #bbf7d0; }
+    #status.erro      { display:block; background:#fef2f2; color:#dc2626; border:1px solid #fecaca; }
+    #status.carregando{ display:block; background:#fffbeb; color:#b45309; border:1px solid #fde68a; }
 
-    /* RESULTADO */
-    #resultado { display: none; }
+    /* ═══════════════════════════════════════
+       RELATÓRIO — estilo CraftNote melhorado
+    ═══════════════════════════════════════ */
+    #resultado { display: none; margin-top: 16px; }
 
-    .rel-header {
-      background: var(--carvo-dark);
-      color: white;
-      padding: 16px 20px;
-      border-radius: 10px;
-      margin-bottom: 16px;
+    .doc-header {
+      padding-bottom: 14px;
+      border-bottom: 2px solid var(--carvo-dark);
+      margin-bottom: 20px;
     }
-    .rel-header h2 { font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: .8px; color: var(--carvo-accent); }
-    .rel-header p  { font-size: 12px; opacity: .6; margin-top: 3px; }
+    .doc-empresa { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--carvo-accent); background: var(--carvo-dark); display: inline-block; padding: 3px 8px; border-radius: 4px; margin-bottom: 8px; }
+    .doc-titulo  { font-size: 20px; font-weight: 800; color: var(--carvo-dark); line-height: 1.2; }
+    .doc-data    { font-size: 12px; color: var(--carvo-sub); margin-top: 4px; }
 
-    .rel-secao {
-      margin-bottom: 14px;
-      border: 1px solid var(--carvo-border);
-      border-radius: 10px;
-      overflow: hidden;
-    }
-    .rel-secao-titulo {
-      padding: 10px 16px;
-      font-size: 11px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: .6px;
-      display: flex;
-      align-items: center;
-      gap: 7px;
-    }
-    .rel-secao-corpo {
-      padding: 14px 16px;
-      font-size: 14px;
-      line-height: 1.8;
-      color: #374151;
-      background: white;
-    }
-    .rel-secao-corpo ul {
-      padding-left: 18px;
-      line-height: 1.9;
-    }
-    .rel-secao-corpo ul li { margin-bottom: 4px; }
+    .doc-secao { margin-bottom: 22px; }
 
-    .t-resumo    { background: var(--carvo-dark); color: var(--carvo-accent); }
-    .t-contexto  { background: #1e3a5f; color: #93c5fd; }
-    .t-temas     { background: #1a3a2a; color: #86efac; }
-    .t-decisoes  { background: #3a2a00; color: #fde68a; }
-    .t-acao      { background: #1a2e3a; color: #7dd3fc; }
-    .t-financeiro{ background: #2a1a3a; color: #c4b5fd; }
-    .t-estrategia{ background: #1a3a1a; color: #a7f3d0; }
-    .t-atencao   { background: #3a1a1a; color: #fca5a5; }
-    .t-kpi       { background: #1a2a1a; color: #d9f99d; }
+    .doc-secao-label {
+      font-size: 11px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: .7px; color: var(--carvo-sub);
+      margin-bottom: 8px; padding-bottom: 5px;
+      border-bottom: 1px solid var(--carvo-border);
+      display: flex; align-items: center; gap: 6px;
+    }
+    .doc-secao-label .dot {
+      width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0;
+    }
+
+    /* Cores dos dots por seção */
+    .dot-visao     { background: var(--carvo-dark); }
+    .dot-pontos    { background: #6366f1; }
+    .dot-diag      { background: #0891b2; }
+    .dot-decisoes  { background: #16a34a; }
+    .dot-acao      { background: #ea580c; }
+    .dot-impedit   { background: #dc2626; }
+    .dot-financ    { background: #7c3aed; }
+    .dot-rec       { background: #0e7490; }
+    .dot-passos    { background: var(--carvo-accent); }
+    .dot-kpi       { background: #059669; }
+
+    .doc-paragrafo {
+      font-size: 14px; line-height: 1.75; color: #374151;
+    }
+
+    .doc-bullets { list-style: none; padding: 0; }
+    .doc-bullets li {
+      font-size: 14px; line-height: 1.65; color: #374151;
+      padding: 4px 0 4px 18px; position: relative;
+      border-bottom: 1px solid #f9fafb;
+    }
+    .doc-bullets li:last-child { border-bottom: none; }
+    .doc-bullets li::before {
+      content: '•'; position: absolute; left: 0;
+      color: var(--carvo-sub); font-size: 16px; line-height: 1.4;
+    }
+
+    /* Checklist para itens de ação */
+    .doc-checklist { list-style: none; padding: 0; }
+    .doc-checklist li {
+      font-size: 13.5px; line-height: 1.55; color: #374151;
+      padding: 7px 0 7px 28px; position: relative;
+      border-bottom: 1px solid #f3f4f6;
+    }
+    .doc-checklist li:last-child { border-bottom: none; }
+    .doc-checklist li::before {
+      content: '☐'; position: absolute; left: 0;
+      color: var(--carvo-sub); font-size: 15px; line-height: 1.4;
+    }
+    .doc-checklist li .meta {
+      display: block; font-size: 11px; color: var(--carvo-sub);
+      margin-top: 2px; font-style: italic;
+    }
+
+    /* Diagnóstico — parágrafo com borda lateral */
+    .doc-diag-box {
+      border-left: 3px solid #0891b2;
+      padding-left: 12px;
+      font-size: 14px; line-height: 1.75; color: #374151;
+    }
+
+    /* Financeiro */
+    .doc-financ-box {
+      border-left: 3px solid #7c3aed;
+      padding-left: 12px;
+      font-size: 14px; line-height: 1.75; color: #374151;
+    }
+
+    /* KPI chips */
+    .kpi-grid { display: flex; flex-wrap: wrap; gap: 8px; }
+    .kpi-chip {
+      background: #f0fdf4; border: 1px solid #bbf7d0;
+      border-radius: 6px; padding: 6px 11px;
+      font-size: 12px; color: #166534; font-weight: 500;
+    }
 
     /* SPINNER */
     .spinner {
-      display: inline-block;
-      width: 13px; height: 13px;
-      border: 2px solid var(--carvo-accent);
-      border-top-color: transparent;
-      border-radius: 50%;
-      animation: girar .7s linear infinite;
-      vertical-align: middle;
-      margin-right: 5px;
+      display: inline-block; width: 12px; height: 12px;
+      border: 2px solid var(--carvo-accent); border-top-color: transparent;
+      border-radius: 50%; animation: girar .7s linear infinite;
+      vertical-align: middle; margin-right: 5px;
     }
     @keyframes girar { to { transform: rotate(360deg); } }
 
     #acoesResultado {
-      display: none;
-      gap: 9px;
-      flex-wrap: wrap;
-      margin-top: 14px;
-      padding-top: 14px;
+      display: none; gap: 8px; flex-wrap: wrap;
+      margin-top: 14px; padding-top: 14px;
       border-top: 1px solid var(--carvo-border);
     }
 
     @media (max-width: 480px) {
       .botoes, #acoesResultado { flex-direction: column; }
       .btn { justify-content: center; }
+      .kpi-grid { flex-direction: column; }
     }
   </style>
 </head>
@@ -282,27 +268,23 @@
   </div>
 </header>
 
-<!-- CONFIGURAÇÃO -->
+<!-- SETUP -->
 <div id="setup">
   <h2>⚙️ Configuração inicial</h2>
-
   <div class="campo-setup">
-    <label>Chave da API Groq (gratuita, sem cartão)</label>
+    <label>Chave da API Groq (gratuita)</label>
     <input type="password" id="cfgChave" placeholder="gsk_...">
-    <small>Crie em <strong>console.groq.com</strong> → API Keys → Create API Key</small>
+    <small>console.groq.com → API Keys → Create API Key (sem cartão)</small>
   </div>
-
   <div class="campo-setup">
-    <label>Seu e-mail</label>
+    <label>E-mail</label>
     <input type="email" id="cfgEmail" placeholder="seu@email.com">
   </div>
-
   <div class="campo-setup">
-    <label>Nome da empresa / unidade</label>
+    <label>Empresa / Unidade</label>
     <input type="text" id="cfgEmpresa" placeholder="Ex: Carvo Restaurante — Unidade Centro">
   </div>
-
-  <div style="margin-top:14px" class="botoes">
+  <div style="margin-top:12px" class="botoes">
     <button class="btn btn-accent" onclick="salvarConfig()">✔ Salvar</button>
     <button class="btn btn-ghost"  onclick="toggleConfig()">Fechar</button>
   </div>
@@ -310,21 +292,18 @@
 
 <!-- GRAVAÇÃO -->
 <div class="card">
-  <h2>🎙️ Gravação da Reunião</h2>
-
+  <h2>🎙️ Gravação</h2>
   <div id="barraGravando">
     <div class="pulse"></div>
     <span>Gravando... fale normalmente</span>
     <span id="cronometro">00:00</span>
   </div>
-
-  <div class="botoes" style="margin-bottom:14px">
-    <button class="btn btn-danger"   id="btnGravar" onclick="iniciarGravacao()">🎙️ Iniciar</button>
-    <button class="btn btn-ghost"    id="btnParar"  onclick="pararGravacao()" disabled>⏹️ Parar</button>
-    <button class="btn btn-ghost"    id="btnLimpar" onclick="limparTudo()">🗑️ Limpar</button>
-    <button class="btn btn-ghost"    style="margin-left:auto" onclick="toggleConfig()">⚙️ Config</button>
+  <div class="botoes" style="margin-bottom:12px">
+    <button class="btn btn-danger" id="btnGravar" onclick="iniciarGravacao()">🎙️ Iniciar</button>
+    <button class="btn btn-ghost"  id="btnParar"  onclick="pararGravacao()" disabled>⏹️ Parar</button>
+    <button class="btn btn-ghost"  id="btnLimpar" onclick="limparTudo()">🗑️ Limpar</button>
+    <button class="btn btn-ghost"  style="margin-left:auto" onclick="toggleConfig()">⚙️ Config</button>
   </div>
-
   <textarea id="transcricao" placeholder="A transcrição aparecerá aqui em tempo real...&#10;&#10;Você também pode colar ou digitar o texto manualmente."></textarea>
   <div class="rodape-texto">
     <span id="contador">0 palavras</span>
@@ -334,20 +313,16 @@
 
 <!-- RELATÓRIO -->
 <div class="card">
-  <h2>📊 Relatório Executivo</h2>
-
+  <h2>📄 Relatório Executivo</h2>
   <div id="status"></div>
-
   <div class="botoes">
     <button class="btn btn-accent" id="btnGerar" onclick="gerarRelatorio()">✨ Gerar Relatório</button>
   </div>
-
   <div id="resultado"></div>
-
   <div id="acoesResultado" class="botoes">
-    <button class="btn btn-primary"  onclick="enviarEmail()">📧 Enviar por E-mail</button>
-    <button class="btn btn-ghost"    onclick="baixarRelatorio()">⬇️ Baixar .txt</button>
-    <button class="btn btn-ghost"    onclick="copiarRelatorio()">📋 Copiar</button>
+    <button class="btn btn-primary" onclick="enviarEmail()">📧 E-mail</button>
+    <button class="btn btn-ghost"   onclick="baixarRelatorio()">⬇️ Baixar</button>
+    <button class="btn btn-ghost"   onclick="copiarRelatorio()">📋 Copiar</button>
   </div>
 </div>
 
@@ -373,7 +348,7 @@
     const chave   = document.getElementById('cfgChave').value.trim();
     const email   = document.getElementById('cfgEmail').value.trim();
     const empresa = document.getElementById('cfgEmpresa').value.trim();
-    if (!chave) { alert('Cole a chave da API Groq.'); return; }
+    if (!chave) { alert('Cole a chave Groq.'); return; }
     if (!email) { alert('Digite seu e-mail.'); return; }
     cfg = { chave, email, empresa };
     localStorage.setItem('cb_chave',   chave);
@@ -401,10 +376,7 @@
 
   function comecarRec() {
     rec = new SpeechRec();
-    rec.lang = 'pt-BR';
-    rec.continuous = true;
-    rec.interimResults = true;
-
+    rec.lang = 'pt-BR'; rec.continuous = true; rec.interimResults = true;
     rec.onstart = () => {
       gravando = true;
       document.getElementById('barraGravando').classList.add('ativo');
@@ -419,7 +391,6 @@
         document.getElementById('cronometro').textContent = m+':'+s;
       }, 1000);
     };
-
     rec.onresult = ev => {
       let fin = '', tmp = '';
       for (let i = ev.resultIndex; i < ev.results.length; i++) {
@@ -432,14 +403,12 @@
       campo.scrollTop = campo.scrollHeight;
       atualizarContador();
     };
-
     rec.onerror = ev => {
       if (ev.error === 'not-allowed' || ev.error === 'service-not-allowed') {
         pararGravacao();
         mostrarStatus('Microfone bloqueado. Verifique as permissões do Chrome.', 'erro');
       }
     };
-
     rec.onend = () => { if (gravando) rec.start(); };
     rec.start();
   }
@@ -483,14 +452,13 @@
     atualizarContador();
   });
 
-  // ─── GROQ / IA ───────────────────────────────────────────
+  // ─── IA ──────────────────────────────────────────────────
   async function gerarRelatorio() {
     if (!cfg.chave) {
       document.getElementById('setup').style.display = 'block';
       mostrarStatus('Configure a chave Groq antes de continuar.', 'erro');
       return;
     }
-
     const transcricao = document.getElementById('transcricao').value.trim();
     if (!transcricao || transcricao.length < 20) {
       mostrarStatus('Grave a reunião ou cole o texto antes de gerar o relatório.', 'erro');
@@ -504,60 +472,52 @@
 
     const empresa = cfg.empresa || 'empresa';
 
-    // REGRA CENTRAL: cada seção responde uma pergunta diferente — nenhuma repete informação de outra
-    const systemMsg = `Você é um consultor sênior de gestão para negócios de varejo alimentar (restaurantes, food service, redes de alimentação).
-Empresa analisada: ${empresa}.
+    const systemMsg = `Você é um consultor sênior de gestão especializado em varejo alimentar (restaurantes, food service, redes de alimentação). Empresa: ${empresa}.
 
-REGRAS ABSOLUTAS DE QUALIDADE — violá-las invalida o relatório:
-1. ZERO REPETIÇÃO: cada seção responde uma pergunta diferente. Se uma informação já foi dita, ela NÃO aparece em outra seção.
-2. ZERO GENERALIDADE: proibido usar frases como "é importante", "deve-se atentar", "é fundamental", "a equipe deve". Substitua por afirmações específicas com dados reais da transcrição.
-3. CITE O CONCRETO: use nomes, valores, percentuais, datas e situações exatas mencionadas na reunião. Se não existirem, diga explicitamente o que está faltando.
-4. ANÁLISE CRÍTICA REAL: aponte falhas, omissões e contradições na discussão. Não valide automaticamente o que foi dito.
-5. LINGUAGEM EXECUTIVA: direta, densa, sem rodeios. Cada frase deve entregar valor.`;
+REGRAS ABSOLUTAS — violá-las invalida o relatório:
+1. ZERO REPETIÇÃO entre seções. Cada seção entrega informação exclusiva que não aparece em nenhuma outra.
+2. ZERO GENERALIDADE. Proibido: "é importante", "deve-se atentar", "é fundamental". Use fatos concretos.
+3. CITE DADOS REAIS: nomes, valores, datas, ferramentas e situações exatas da transcrição.
+4. ANÁLISE CRÍTICA: aponte falhas, omissões e contradições. Não valide automaticamente o que foi dito.
+5. LINGUAGEM DIRETA: cada frase entrega valor. Sem rodeios.`;
 
-    const userMsg = `Analise a transcrição abaixo e gere um relatório executivo. Cada seção tem uma função exclusiva — leia com atenção antes de escrever.
+    const userMsg = `Analise a transcrição e gere um relatório executivo no formato abaixo. Cada seção tem função exclusiva — leia com atenção.
 
-SEÇÃO 1 — RESUMO EXECUTIVO
-Pergunta que responde: "O que aconteceu nesta reunião?"
-Escreva 1 parágrafo denso (6-8 linhas) para um diretor que não participou. Mencione: propósito real da reunião, o estado emocional/operacional do grupo, os 2-3 temas centrais e o resultado final. Não detalhe os temas — apenas sintetize.
+VISÃO GERAL
+Um único parágrafo de 4 a 6 linhas. Responde: "O que foi esta reunião?" Para um gestor que não participou. Inclua: propósito real, estado operacional do grupo, tema central e resultado. Seja denso e objetivo.
 
-SEÇÃO 2 — DIAGNÓSTICO DA SITUAÇÃO
-Pergunta que responde: "Qual é o estado real do negócio com base no que foi revelado?"
-NÃO repita o que foi dito no resumo. Interprete os dados, comportamentos e preocupações da reunião para diagnosticar a situação atual do negócio: onde está saudável, onde está vulnerável, o que está sendo ignorado. Use indicadores de varejo alimentar quando aplicável (CMV, giro, perdas, margem).
+PONTOS PRINCIPAIS
+Lista de bullets (máximo 7). Responde: "O que é essencial saber sobre esta reunião?" Apenas fatos e dados concretos extraídos da transcrição. Não repita o que está na visão geral — vá mais fundo nos detalhes.
 
-SEÇÃO 3 — ANÁLISE CRÍTICA DAS DISCUSSÕES
-Pergunta que responde: "Como foi a qualidade da discussão? O que foi bem discutido e o que ficou raso?"
-NÃO liste o que foi discutido — isso é função das outras seções. Avalie: quais argumentos foram sólidos, quais foram superficiais, o que não foi questionado e deveria ter sido, que dados importantes estavam ausentes da conversa, e se as prioridades abordadas correspondem à realidade do negócio.
+DIAGNÓSTICO DA SITUAÇÃO
+Parágrafo analítico curto (3 a 4 linhas). Responde: "Qual o estado real do negócio com base no que foi revelado?" Interprete os dados — não descreva a reunião. Cite indicadores de varejo alimentar quando aplicável (CMV, perdas, giro, margem). Inclua o que está saudável e o que está vulnerável.
 
-SEÇÃO 4 — DECISÕES E RACIONAL
-Pergunta que responde: "O que foi decidido, por quê, e essa decisão foi bem fundamentada?"
-NÃO repita discussões — só o que foi efetivamente decidido. Para cada decisão: descreva a decisão, avalie criticamente se o racional foi sólido ou frágil, e aponte o risco direto daquela decisão se for mal executada.
+DECISÕES
+Lista de bullets. Responde: "O que foi efetivamente decidido?" Para cada decisão: o que foi decidido + avaliação crítica (a decisão foi bem fundamentada ou frágil?). Não repita discussões — só deliberações.
 
-SEÇÃO 5 — PLANO DE AÇÃO
-Pergunta que responde: "Quem faz o quê, quando e com que prioridade?"
-Lista de ações NOVAS — não mencione as decisões já listadas na seção 4. Formato obrigatório de cada item: "AÇÃO: [descrição objetiva] | RESPONSÁVEL: [nome ou cargo] | PRAZO: [data ou período] | PRIORIDADE: [Alta/Média/Baixa]". Se responsável ou prazo não foram mencionados, escreva "A definir".
+ITENS DE AÇÃO
+Lista de checkboxes no formato: "Tarefa objetiva | Responsável: X | Prazo: Y | Prioridade: Alta/Média/Baixa". Se responsável ou prazo não foram mencionados, escreva "A definir". Ações novas — não repita as decisões.
 
-SEÇÃO 6 — IMPACTO FINANCEIRO
-Pergunta que responde: "Quais são as consequências financeiras concretas do que foi discutido e decidido?"
-NÃO repita as decisões. Calcule ou estime: impacto no CMV%, na margem bruta, no fluxo de caixa de curto prazo, no custo de estoque ou no índice de perdas. Se os dados não permitirem cálculo, especifique exatamente quais números precisam ser levantados para fazer essa análise.
+IMPEDIMENTOS
+Lista de bullets. Responde: "O que está bloqueando o progresso?" Cite impedimentos reais mencionados + impedimentos implícitos que a equipe não verbalizou mas que existem com base no contexto.
 
-SEÇÃO 7 — RECOMENDAÇÕES ESTRATÉGICAS
-Pergunta que responde: "O que o consultor recomenda fazer além do que já foi decidido?"
-NÃO repita decisões nem ações já listadas. Apresente recomendações originais baseadas no que foi revelado na reunião mas NÃO foi abordado adequadamente. Seja específico: cite a oportunidade, a ação recomendada e o resultado esperado em termos de negócio.
+ANÁLISE FINANCEIRA
+Parágrafo analítico de 3 a 4 linhas. Responde: "Qual o impacto financeiro do que foi discutido?" Estime ou calcule efeitos sobre CMV%, margem, fluxo de caixa, custo de estoque ou perdas. Se os dados não permitirem cálculo, especifique exatamente quais números precisam ser levantados.
 
-SEÇÃO 8 — KPIs DE ACOMPANHAMENTO
-Pergunta que responde: "Como medir se as decisões desta reunião estão gerando resultado?"
-Liste apenas indicadores diretamente ligados ao que foi discutido nesta reunião. Para cada KPI: nome do indicador, meta sugerida (se possível inferir da conversa) e frequência de monitoramento.
+RECOMENDAÇÕES
+Lista de bullets (máximo 5). Responde: "O que o consultor recomenda além do que já foi decidido?" Recomendações originais baseadas no que ficou de fora da pauta. Cada bullet: oportunidade + ação recomendada + resultado esperado.
 
-SEÇÃO 9 — RISCOS E PONTOS CEGOS
-Pergunta que responde: "O que pode dar errado e o que não foi discutido mas deveria ter sido?"
-NÃO repita pontos já mencionados nas seções anteriores. Foque em: riscos de execução das decisões tomadas, temas críticos para o negócio que ficaram de fora da pauta, e contradições entre o que foi dito e a realidade do mercado de varejo alimentar.
+PRÓXIMOS PASSOS
+Lista de bullets priorizados. Responde: "O que deve acontecer primeiro na semana seguinte?" Itens concretos, sequenciados por impacto. Não repita os itens de ação — são os movimentos estratégicos prioritários.
+
+KPIs PARA MONITORAR
+Lista de indicadores diretamente ligados ao que foi discutido. Formato: "Nome do KPI | Meta sugerida | Frequência". Apenas KPIs relevantes a esta reunião específica.
 
 Transcrição:
 ${transcricao}
 
 Retorne APENAS um JSON válido, sem markdown, sem texto fora do JSON:
-{"resumo":"...","diagnostico":"...","analise_critica":"...","decisoes":"...","plano_acao":["AÇÃO: ... | RESPONSÁVEL: ... | PRAZO: ... | PRIORIDADE: ..."],"impacto_financeiro":"...","recomendacoes":"...","kpis":["KPI: ... | Meta: ... | Frequência: ..."],"riscos":"..."}`;
+{"visao_geral":"...","pontos_principais":["..."],"diagnostico":"...","decisoes":["..."],"itens_acao":[{"acao":"...","responsavel":"...","prazo":"...","prioridade":"..."}],"impedimentos":["..."],"analise_financeira":"...","recomendacoes":["..."],"proximos_passos":["..."],"kpis":["..."]}`;
 
     try {
       const resp = await fetch('https://api.groq.com/openai/v1/chat/completions', {
@@ -576,10 +536,9 @@ Retorne APENAS um JSON válido, sem markdown, sem texto fora do JSON:
 
       if (!resp.ok) {
         const err = await resp.json().catch(() => ({}));
-        const msg = err.error?.message || ('Status ' + resp.status);
         if (resp.status === 401) throw new Error('Chave inválida. Verifique a chave Groq nas configurações.');
         if (resp.status === 429) throw new Error('Limite atingido. Aguarde 1 minuto e tente novamente.');
-        throw new Error(msg);
+        throw new Error(err.error?.message || 'Status ' + resp.status);
       }
 
       const dados = await resp.json();
@@ -590,7 +549,7 @@ Retorne APENAS um JSON válido, sem markdown, sem texto fora do JSON:
       const rel = JSON.parse(match[0]);
 
       document.getElementById('btnGerar').disabled = false;
-      mostrarStatus('✔ Relatório gerado com sucesso.', 'sucesso');
+      mostrarStatus('✔ Relatório gerado.', 'sucesso');
       exibirRelatorio(rel, transcricao);
 
     } catch (err) {
@@ -603,89 +562,127 @@ Retorne APENAS um JSON válido, sem markdown, sem texto fora do JSON:
   function exibirRelatorio(r, transcricao) {
     const data    = new Date().toLocaleString('pt-BR');
     const empresa = cfg.empresa || 'Carvo';
-    const li = arr => (Array.isArray(arr) ? arr : [arr]).map(i => `<li>${i}</li>`).join('');
 
-    const sec = (titulo, classTitulo, icone, conteudo) => `
-      <div class="rel-secao">
-        <div class="rel-secao-titulo ${classTitulo}">${icone} ${titulo}</div>
-        <div class="rel-secao-corpo">${conteudo}</div>
+    const bullets = arr =>
+      '<ul class="doc-bullets">' +
+      (Array.isArray(arr) ? arr : [arr]).map(i => `<li>${i}</li>`).join('') +
+      '</ul>';
+
+    const checklist = arr => {
+      const items = Array.isArray(arr) ? arr : [arr];
+      return '<ul class="doc-checklist">' + items.map(item => {
+        if (typeof item === 'object') {
+          const meta = [
+            item.responsavel && item.responsavel !== 'A definir' ? 'Resp: ' + item.responsavel : '',
+            item.prazo       && item.prazo       !== 'A definir' ? 'Prazo: ' + item.prazo       : '',
+            item.prioridade  ? item.prioridade : ''
+          ].filter(Boolean).join(' · ');
+          return `<li>${item.acao}${meta ? `<span class="meta">${meta}</span>` : ''}</li>`;
+        }
+        return `<li>${item}</li>`;
+      }).join('') + '</ul>';
+    };
+
+    const kpiChips = arr =>
+      '<div class="kpi-grid">' +
+      (Array.isArray(arr) ? arr : [arr]).map(k => `<span class="kpi-chip">${k}</span>`).join('') +
+      '</div>';
+
+    const sec = (dot, label, conteudo) => `
+      <div class="doc-secao">
+        <div class="doc-secao-label"><span class="dot ${dot}"></span>${label}</div>
+        ${conteudo}
       </div>`;
 
     document.getElementById('resultado').innerHTML = `
-      <div class="rel-header">
-        <h2>Relatório Executivo de Reunião</h2>
-        <p>${empresa} &mdash; ${data}</p>
+      <div class="doc-header">
+        <div class="doc-empresa">${empresa}</div>
+        <div class="doc-titulo">Relatório de Reunião</div>
+        <div class="doc-data">${data}</div>
       </div>
-      ${sec('Resumo Executivo',                    't-resumo',     '📋', `<p>${r.resumo}</p>`)}
-      ${sec('Diagnóstico da Situação',             't-contexto',   '🏪', `<p>${r.diagnostico}</p>`)}
-      ${sec('Análise Crítica das Discussões',      't-temas',      '💬', `<p>${r.analise_critica}</p>`)}
-      ${sec('Decisões e Racional',                 't-decisoes',   '✅', `<p>${r.decisoes}</p>`)}
-      ${sec('Plano de Ação',                       't-acao',       '🚀', `<ul>${li(r.plano_acao)}</ul>`)}
-      ${sec('Impacto Financeiro',                  't-financeiro', '💰', `<p>${r.impacto_financeiro}</p>`)}
-      ${sec('Recomendações Estratégicas',          't-estrategia', '💡', `<p>${r.recomendacoes}</p>`)}
-      ${sec('KPIs de Acompanhamento',              't-kpi',        '📈', `<ul>${li(r.kpis)}</ul>`)}
-      ${sec('Riscos e Pontos Cegos',               't-atencao',    '⚠️', `<p>${r.riscos}</p>`)}
+
+      ${sec('dot-visao',    'Visão Geral',           `<p class="doc-paragrafo">${r.visao_geral}</p>`)}
+      ${sec('dot-pontos',   'Pontos Principais',     bullets(r.pontos_principais))}
+      ${sec('dot-diag',     'Diagnóstico da Situação', `<p class="doc-diag-box">${r.diagnostico}</p>`)}
+      ${sec('dot-decisoes', 'Decisões',              bullets(r.decisoes))}
+      ${sec('dot-acao',     'Itens de Ação',         checklist(r.itens_acao))}
+      ${sec('dot-impedit',  'Impedimentos',          bullets(r.impedimentos))}
+      ${sec('dot-financ',   'Análise Financeira',    `<p class="doc-financ-box">${r.analise_financeira}</p>`)}
+      ${sec('dot-rec',      'Recomendações',         bullets(r.recomendacoes))}
+      ${sec('dot-passos',   'Próximos Passos',       bullets(r.proximos_passos))}
+      ${sec('dot-kpi',      'KPIs para Monitorar',   kpiChips(r.kpis))}
     `;
 
     document.getElementById('resultado').style.display = 'block';
     document.getElementById('acoesResultado').style.display = 'flex';
     document.getElementById('resultado').scrollIntoView({ behavior: 'smooth', block: 'start' });
 
-    const liTxt = arr => (Array.isArray(arr) ? arr : [arr]).map((p,i) => `${i+1}. ${p}`).join('\n');
+    // Texto plano para download / email
+    const liTxt = arr => (Array.isArray(arr) ? arr : [arr]).map((p,i) => `• ${p}`).join('\n');
+    const acaoTxt = arr => (Array.isArray(arr) ? arr : [arr]).map((a,i) => {
+      if (typeof a === 'object') {
+        return `☐ ${a.acao}\n   Resp: ${a.responsavel} · Prazo: ${a.prazo} · ${a.prioridade}`;
+      }
+      return `☐ ${a}`;
+    }).join('\n');
 
     relatorioTexto =
-`CARVO BOOK — RELATÓRIO EXECUTIVO DE REUNIÃO
-${empresa}
-Data: ${data}
+`CARVO BOOK — RELATÓRIO DE REUNIÃO
+${empresa} · ${data}
 
-${'═'.repeat(50)}
-RESUMO EXECUTIVO
-${'═'.repeat(50)}
-${r.resumo}
+${'─'.repeat(48)}
+VISÃO GERAL
+${'─'.repeat(48)}
+${r.visao_geral}
 
-${'═'.repeat(50)}
+${'─'.repeat(48)}
+PONTOS PRINCIPAIS
+${'─'.repeat(48)}
+${liTxt(r.pontos_principais)}
+
+${'─'.repeat(48)}
 DIAGNÓSTICO DA SITUAÇÃO
-${'═'.repeat(50)}
+${'─'.repeat(48)}
 ${r.diagnostico}
 
-${'═'.repeat(50)}
-ANÁLISE CRÍTICA DAS DISCUSSÕES
-${'═'.repeat(50)}
-${r.analise_critica}
+${'─'.repeat(48)}
+DECISÕES
+${'─'.repeat(48)}
+${liTxt(r.decisoes)}
 
-${'═'.repeat(50)}
-DECISÕES E RACIONAL
-${'═'.repeat(50)}
-${r.decisoes}
+${'─'.repeat(48)}
+ITENS DE AÇÃO
+${'─'.repeat(48)}
+${acaoTxt(r.itens_acao)}
 
-${'═'.repeat(50)}
-PLANO DE AÇÃO
-${'═'.repeat(50)}
-${liTxt(r.plano_acao)}
+${'─'.repeat(48)}
+IMPEDIMENTOS
+${'─'.repeat(48)}
+${liTxt(r.impedimentos)}
 
-${'═'.repeat(50)}
-IMPACTO FINANCEIRO
-${'═'.repeat(50)}
-${r.impacto_financeiro}
+${'─'.repeat(48)}
+ANÁLISE FINANCEIRA
+${'─'.repeat(48)}
+${r.analise_financeira}
 
-${'═'.repeat(50)}
-RECOMENDAÇÕES ESTRATÉGICAS
-${'═'.repeat(50)}
-${r.recomendacoes}
+${'─'.repeat(48)}
+RECOMENDAÇÕES
+${'─'.repeat(48)}
+${liTxt(r.recomendacoes)}
 
-${'═'.repeat(50)}
-KPIs DE ACOMPANHAMENTO
-${'═'.repeat(50)}
+${'─'.repeat(48)}
+PRÓXIMOS PASSOS
+${'─'.repeat(48)}
+${liTxt(r.proximos_passos)}
+
+${'─'.repeat(48)}
+KPIs PARA MONITORAR
+${'─'.repeat(48)}
 ${liTxt(r.kpis)}
 
-${'═'.repeat(50)}
-RISCOS E PONTOS CEGOS
-${'═'.repeat(50)}
-${r.riscos}
-
-${'═'.repeat(50)}
+${'─'.repeat(48)}
 TRANSCRIÇÃO COMPLETA
-${'═'.repeat(50)}
+${'─'.repeat(48)}
 ${transcricao}
 
 — Gerado pelo Carvo Book`;
@@ -696,8 +693,7 @@ ${transcricao}
     if (!relatorioTexto) return;
     const data    = new Date().toLocaleString('pt-BR');
     const assunto = encodeURIComponent(`[Carvo Book] Relatório de Reunião — ${data}`);
-    const corpo   = encodeURIComponent(relatorioTexto);
-    window.location.href = `mailto:${encodeURIComponent(cfg.email)}?subject=${assunto}&body=${corpo}`;
+    window.location.href = `mailto:${encodeURIComponent(cfg.email)}?subject=${assunto}&body=${encodeURIComponent(relatorioTexto)}`;
   }
 
   function baixarRelatorio() {
