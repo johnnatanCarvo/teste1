@@ -467,8 +467,12 @@ Retorne APENAS um JSON válido, sem markdown, com esta estrutura exata:
 {"resumo":"...","pontos_discutidos":["..."],"decisoes":["..."],"proximos_passos":["..."],"sugestoes_ia":["..."]}`;
 
     try {
+      // Endpoint padrão da Inference API — tem CORS habilitado para browsers
+      const promptFormatado =
+        `<|system|>\nVocê é um assistente especializado em análise de reuniões de negócios em português brasileiro.</s>\n<|user|>\n${prompt}</s>\n<|assistant|>\n`;
+
       const resp = await fetch(
-        'https://api-inference.huggingface.co/models/HuggingFaceH4/zephyr-7b-beta/v1/chat/completions',
+        'https://api-inference.huggingface.co/models/HuggingFaceH4/zephyr-7b-beta',
         {
           method: 'POST',
           headers: {
@@ -476,30 +480,33 @@ Retorne APENAS um JSON válido, sem markdown, com esta estrutura exata:
             'Content-Type': 'application/json'
           },
           body: JSON.stringify({
-            model: 'HuggingFaceH4/zephyr-7b-beta',
-            messages: [{ role: 'user', content: prompt }],
-            max_tokens: 1500,
-            temperature: 0.2,
-            stream: false
+            inputs: promptFormatado,
+            parameters: {
+              max_new_tokens: 1500,
+              temperature: 0.2,
+              return_full_text: false,
+              do_sample: true
+            }
           })
         }
       );
 
       if (!resp.ok) {
         const err = await resp.json().catch(() => ({}));
-        const msg = err.error || err.message || ('Status ' + resp.status);
-        if (resp.status === 401) throw new Error('Token inválido. Verifique o token do Hugging Face.');
+        const msg = err.error || ('Status ' + resp.status);
+        if (resp.status === 401) throw new Error('Token inválido. Verifique o token do Hugging Face nas configurações.');
         if (resp.status === 503) throw new Error('Modelo carregando (cold start). Aguarde 30 segundos e tente novamente.');
         throw new Error(msg);
       }
 
       const dados = await resp.json();
-      const texto = dados.choices[0].message.content;
-      const limpo = texto.replace(/```json\n?/g,'').replace(/```\n?/g,'').trim();
+      // Resposta formato: [{"generated_text": "..."}]
+      const texto = Array.isArray(dados) ? dados[0].generated_text : dados.generated_text;
+      if (!texto) throw new Error('Resposta vazia da IA. Tente novamente.');
 
-      // Extrai o JSON mesmo que venha com texto antes ou depois
+      const limpo = texto.replace(/```json\n?/g,'').replace(/```\n?/g,'').trim();
       const match = limpo.match(/\{[\s\S]*\}/);
-      if (!match) throw new Error('A IA não retornou um formato válido. Tente novamente.');
+      if (!match) throw new Error('A IA não retornou formato JSON válido. Tente novamente.');
       const rel = JSON.parse(match[0]);
 
       document.getElementById('btnGerar').disabled = false;
