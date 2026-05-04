@@ -226,6 +226,9 @@
   <div class="card">
     <h2>🎙️ Gravação da Reunião</h2>
 
+    <!-- Aviso de microfone bloqueado (preenchido via JS) -->
+    <div id="avisoMicrofone" style="display:none;background:#fff3e0;border:1.5px solid #f57c00;border-radius:8px;padding:14px 16px;margin-bottom:14px;font-size:13px;color:#7a3c00;line-height:1.5"></div>
+
     <div class="status-gravando" id="statusGravando">
       <div class="pulse"></div> Gravando... fale normalmente
     </div>
@@ -274,6 +277,18 @@
         return;
       }
 
+      // Solicita permissão explicitamente antes de iniciar — resolve o bloqueio do iframe
+      navigator.mediaDevices.getUserMedia({ audio: true })
+        .then(function(stream) {
+          stream.getTracks().forEach(t => t.stop()); // libera o stream, só precisávamos da permissão
+          iniciarReconhecimento();
+        })
+        .catch(function(err) {
+          mostrarErraMicrofone(err.name);
+        });
+    }
+
+    function iniciarReconhecimento() {
       reconhecimento = new SpeechRec();
       reconhecimento.lang = 'pt-BR';
       reconhecimento.continuous = true;
@@ -285,6 +300,7 @@
         document.getElementById('statusGravando').classList.add('ativo');
         document.getElementById('btnGravar').disabled = true;
         document.getElementById('btnParar').disabled = false;
+        document.getElementById('avisoMicrofone').style.display = 'none';
       };
 
       reconhecimento.onresult = function(evento) {
@@ -309,8 +325,9 @@
       };
 
       reconhecimento.onerror = function(evento) {
-        if (evento.error === 'not-allowed') {
-          mostrarStatus('Acesso ao microfone negado. Permita o microfone no navegador.', 'erro');
+        if (evento.error === 'not-allowed' || evento.error === 'service-not-allowed') {
+          pararGravacao();
+          mostrarErraMicrofone('NotAllowedError');
         } else if (evento.error !== 'no-speech') {
           mostrarStatus('Erro no microfone: ' + evento.error, 'erro');
         }
@@ -322,6 +339,29 @@
       };
 
       reconhecimento.start();
+    }
+
+    function mostrarErraMicrofone(nomeErro) {
+      const aviso = document.getElementById('avisoMicrofone');
+      aviso.style.display = 'block';
+
+      const dominio = location.hostname || 'script.googleusercontent.com';
+
+      aviso.innerHTML = `
+        <strong>Microfone bloqueado</strong> — siga estes passos no Chrome:<br><br>
+        <ol style="margin:8px 0 8px 18px;line-height:1.9">
+          <li>Clique no <strong>ícone de cadeado</strong> (ou câmera) na barra de endereço</li>
+          <li>Clique em <strong>Configurações do site</strong></li>
+          <li>Em <strong>Microfone</strong>, troque de <em>Bloqueado</em> para <strong>Permitir</strong></li>
+          <li>Clique em <strong>Recarregar</strong> abaixo e tente novamente</li>
+        </ol>
+        <div style="margin-top:6px;font-size:12px;color:#a05000">
+          Domínio que precisa da permissão: <strong>${dominio}</strong>
+        </div>
+        <button onclick="location.reload()" style="margin-top:10px;padding:7px 16px;background:#f57c00;color:white;border:none;border-radius:6px;cursor:pointer;font-weight:600">
+          Recarregar página
+        </button>
+      `;
     }
 
     function pararGravacao() {
