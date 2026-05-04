@@ -303,7 +303,8 @@
   let relatorioTexto = '';
 
   (function init() {
-    if (cfg.chave && cfg.email) {
+    // Só esconde o setup se a chave tiver pelo menos 20 caracteres (chave real)
+    if (cfg.chave && cfg.chave.length > 20 && cfg.email) {
       document.getElementById('setup').style.display = 'none';
     }
     document.getElementById('cfgChave').value = cfg.chave;
@@ -464,7 +465,7 @@ Retorne APENAS um JSON válido, sem markdown, com esta estrutura exata:
 
     try {
       const resp = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${cfg.chave}`,
+        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${cfg.chave}`,
         {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
