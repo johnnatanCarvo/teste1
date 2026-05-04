@@ -7,46 +7,73 @@
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-    body {
-      font-family: 'Segoe UI', Arial, sans-serif;
-      background: #f0f2f5;
-      min-height: 100vh;
-      padding: 16px;
-      color: #333;
+    :root {
+      --carvo-dark:   #1a1a2e;
+      --carvo-mid:    #16213e;
+      --carvo-accent: #e8a020;
+      --carvo-light:  #f5f5f0;
+      --carvo-text:   #2d2d2d;
+      --carvo-muted:  #6b7280;
+      --carvo-border: #e5e7eb;
     }
 
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: var(--carvo-light);
+      min-height: 100vh;
+      padding: 16px;
+      color: var(--carvo-text);
+    }
+
+    /* HEADER */
     header {
-      background: linear-gradient(135deg, #1a73e8 0%, #0d47a1 100%);
+      background: linear-gradient(135deg, var(--carvo-dark) 0%, var(--carvo-mid) 100%);
       color: white;
-      padding: 18px 24px;
+      padding: 20px 26px;
       border-radius: 12px;
       margin-bottom: 16px;
-      box-shadow: 0 3px 12px rgba(26,115,232,.35);
+      box-shadow: 0 4px 16px rgba(26,26,46,.3);
+      display: flex;
+      align-items: center;
+      gap: 16px;
     }
-    header h1 { font-size: 22px; font-weight: 700; }
-    header p  { font-size: 12px; opacity: .8; margin-top: 3px; }
+    .logo-mark {
+      width: 44px; height: 44px;
+      background: var(--carvo-accent);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      font-weight: 900;
+      color: var(--carvo-dark);
+      flex-shrink: 0;
+      letter-spacing: -1px;
+    }
+    header h1 { font-size: 20px; font-weight: 700; letter-spacing: .3px; }
+    header p  { font-size: 12px; opacity: .65; margin-top: 2px; }
 
     /* SETUP */
     #setup {
       background: white;
-      border: 2px solid #f57c00;
+      border: 2px solid var(--carvo-accent);
       border-radius: 12px;
       padding: 20px 24px;
       margin-bottom: 16px;
     }
-    #setup h2 { font-size: 15px; color: #e65100; margin-bottom: 12px; }
+    #setup h2 { font-size: 14px; color: var(--carvo-dark); font-weight: 700; margin-bottom: 14px; }
     .campo-setup { margin-bottom: 12px; }
-    .campo-setup label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 5px; color: #555; }
+    .campo-setup label { display: block; font-size: 12px; font-weight: 600; margin-bottom: 5px; color: var(--carvo-muted); text-transform: uppercase; letter-spacing: .4px; }
     .campo-setup input {
       width: 100%;
       padding: 9px 12px;
-      border: 1.5px solid #ddd;
+      border: 1.5px solid var(--carvo-border);
       border-radius: 7px;
       font-size: 13px;
-      color: #333;
+      color: var(--carvo-text);
     }
-    .campo-setup input:focus { outline: none; border-color: #1a73e8; }
-    .campo-setup small { display: block; margin-top: 4px; font-size: 11px; color: #888; }
+    .campo-setup input:focus { outline: none; border-color: var(--carvo-accent); }
+    .campo-setup small { display: block; margin-top: 4px; font-size: 11px; color: var(--carvo-muted); }
 
     /* CARDS */
     .card {
@@ -54,21 +81,24 @@
       border-radius: 12px;
       padding: 20px 24px;
       margin-bottom: 14px;
-      box-shadow: 0 1px 4px rgba(0,0,0,.07);
+      box-shadow: 0 1px 4px rgba(0,0,0,.06);
+      border: 1px solid var(--carvo-border);
     }
     .card h2 {
-      font-size: 14px;
+      font-size: 13px;
       font-weight: 700;
-      color: #1a73e8;
+      color: var(--carvo-dark);
       margin-bottom: 14px;
       display: flex;
       align-items: center;
       gap: 7px;
+      text-transform: uppercase;
+      letter-spacing: .5px;
     }
 
     /* BOTÕES */
     .btn {
-      padding: 10px 20px;
+      padding: 10px 18px;
       border: none;
       border-radius: 8px;
       font-size: 13px;
@@ -82,18 +112,14 @@
     .btn:disabled { opacity: .4; cursor: not-allowed; }
     .btn:active:not(:disabled) { transform: scale(.97); }
 
-    .btn-red    { background: #ea4335; color: white; }
-    .btn-red:hover:not(:disabled)    { background: #c62828; }
-    .btn-orange { background: #f57c00; color: white; }
-    .btn-orange:hover:not(:disabled) { background: #e65100; }
-    .btn-green  { background: #34a853; color: white; }
-    .btn-green:hover:not(:disabled)  { background: #2e7d32; }
-    .btn-blue   { background: #1a73e8; color: white; }
-    .btn-blue:hover:not(:disabled)   { background: #1558b0; }
-    .btn-gray   { background: #f1f3f4; color: #555; }
-    .btn-gray:hover:not(:disabled)   { background: #e0e0e0; }
-    .btn-purple { background: #9c27b0; color: white; }
-    .btn-purple:hover:not(:disabled) { background: #6a1b9a; }
+    .btn-primary { background: var(--carvo-dark);   color: white; }
+    .btn-primary:hover:not(:disabled) { background: #0f0f1a; }
+    .btn-accent  { background: var(--carvo-accent);  color: var(--carvo-dark); font-weight: 700; }
+    .btn-accent:hover:not(:disabled)  { background: #d4911a; }
+    .btn-danger  { background: #dc2626; color: white; }
+    .btn-danger:hover:not(:disabled)  { background: #b91c1c; }
+    .btn-ghost   { background: #f3f4f6; color: #555; border: 1px solid var(--carvo-border); }
+    .btn-ghost:hover:not(:disabled)   { background: #e5e7eb; }
 
     .botoes { display: flex; gap: 9px; flex-wrap: wrap; }
 
@@ -102,18 +128,19 @@
       display: none;
       align-items: center;
       gap: 10px;
-      background: #fce8e6;
+      background: #fef2f2;
+      border: 1px solid #fecaca;
       border-radius: 8px;
       padding: 10px 14px;
       margin-bottom: 12px;
       font-size: 13px;
       font-weight: 600;
-      color: #b71c1c;
+      color: #dc2626;
     }
     #barraGravando.ativo { display: flex; }
     .pulse {
       width: 10px; height: 10px;
-      background: #ea4335;
+      background: #dc2626;
       border-radius: 50%;
       flex-shrink: 0;
       animation: pulsar 1s infinite;
@@ -122,33 +149,33 @@
       0%,100% { opacity:1; transform:scale(1); }
       50%      { opacity:.3; transform:scale(.6); }
     }
-    #cronometro { margin-left: auto; font-variant-numeric: tabular-nums; }
+    #cronometro { margin-left: auto; font-variant-numeric: tabular-nums; font-weight: 700; }
 
     /* TEXTAREA */
     #transcricao {
       width: 100%;
       min-height: 130px;
-      max-height: 250px;
-      border: 1.5px solid #e0e0e0;
+      max-height: 260px;
+      border: 1.5px solid var(--carvo-border);
       border-radius: 8px;
       padding: 12px 14px;
       font-size: 14px;
-      line-height: 1.6;
+      line-height: 1.65;
       resize: vertical;
-      background: #fafafa;
-      color: #333;
+      background: #fafaf9;
+      color: var(--carvo-text);
       font-family: inherit;
       overflow-y: auto;
     }
-    #transcricao:focus { outline: none; border-color: #1a73e8; background: white; }
+    #transcricao:focus { outline: none; border-color: var(--carvo-accent); background: white; }
 
     .rodape-texto {
       display: flex;
       justify-content: space-between;
       align-items: center;
       margin-top: 6px;
-      font-size: 12px;
-      color: #999;
+      font-size: 11px;
+      color: var(--carvo-muted);
     }
 
     /* STATUS */
@@ -160,45 +187,68 @@
       margin-bottom: 12px;
       display: none;
     }
-    #status.info      { display:block; background:#e8f0fe; color:#1557b0; }
-    #status.sucesso   { display:block; background:#e6f4ea; color:#1e7e34; }
-    #status.erro      { display:block; background:#fce8e6; color:#b71c1c; }
-    #status.carregando{ display:block; background:#fff8e1; color:#e65100; }
+    #status.info       { display:block; background:#eff6ff; color:#1d4ed8; border:1px solid #bfdbfe; }
+    #status.sucesso    { display:block; background:#f0fdf4; color:#15803d; border:1px solid #bbf7d0; }
+    #status.erro       { display:block; background:#fef2f2; color:#dc2626; border:1px solid #fecaca; }
+    #status.carregando { display:block; background:#fffbeb; color:#b45309; border:1px solid #fde68a; }
 
     /* RESULTADO */
     #resultado { display: none; }
-    #resultado hr { border: none; border-top: 1.5px solid #f0f0f0; margin: 16px 0; }
-    .secao { margin-bottom: 16px; }
-    .secao h3 {
-      font-size: 13px;
+
+    .rel-header {
+      background: var(--carvo-dark);
+      color: white;
+      padding: 16px 20px;
+      border-radius: 10px;
+      margin-bottom: 16px;
+    }
+    .rel-header h2 { font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: .8px; color: var(--carvo-accent); }
+    .rel-header p  { font-size: 12px; opacity: .6; margin-top: 3px; }
+
+    .rel-secao {
+      margin-bottom: 14px;
+      border: 1px solid var(--carvo-border);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    .rel-secao-titulo {
+      padding: 10px 16px;
+      font-size: 11px;
       font-weight: 700;
-      margin-bottom: 7px;
+      text-transform: uppercase;
+      letter-spacing: .6px;
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 7px;
     }
-    .secao ul { padding-left: 18px; font-size: 14px; line-height: 1.75; color: #444; }
-    .resumo-box, .texto-secao {
+    .rel-secao-corpo {
+      padding: 14px 16px;
       font-size: 14px;
       line-height: 1.8;
-      color: #444;
-      background: #f8f9fa;
-      padding: 11px 14px;
-      border-radius: 8px;
+      color: #374151;
+      background: white;
     }
-    .resumo-box  { border-left: 4px solid #1a73e8; }
-    .texto-secao { border-left: 4px solid #ddd; background: #fafafa; }
-    .s1 h3 { color: #1a73e8; }
-    .s2 h3 { color: #34a853; }
-    .s3 h3 { color: #f57c00; }
-    .s4 h3 { color: #ea4335; }
-    .s5 h3 { color: #9c27b0; }
+    .rel-secao-corpo ul {
+      padding-left: 18px;
+      line-height: 1.9;
+    }
+    .rel-secao-corpo ul li { margin-bottom: 4px; }
+
+    .t-resumo    { background: var(--carvo-dark); color: var(--carvo-accent); }
+    .t-contexto  { background: #1e3a5f; color: #93c5fd; }
+    .t-temas     { background: #1a3a2a; color: #86efac; }
+    .t-decisoes  { background: #3a2a00; color: #fde68a; }
+    .t-acao      { background: #1a2e3a; color: #7dd3fc; }
+    .t-financeiro{ background: #2a1a3a; color: #c4b5fd; }
+    .t-estrategia{ background: #1a3a1a; color: #a7f3d0; }
+    .t-atencao   { background: #3a1a1a; color: #fca5a5; }
+    .t-kpi       { background: #1a2a1a; color: #d9f99d; }
 
     /* SPINNER */
     .spinner {
       display: inline-block;
       width: 13px; height: 13px;
-      border: 2px solid #f3a500;
+      border: 2px solid var(--carvo-accent);
       border-top-color: transparent;
       border-radius: 50%;
       animation: girar .7s linear infinite;
@@ -207,14 +257,13 @@
     }
     @keyframes girar { to { transform: rotate(360deg); } }
 
-    /* AÇÕES DO RESULTADO */
     #acoesResultado {
       display: none;
       gap: 9px;
       flex-wrap: wrap;
-      margin-top: 16px;
-      padding-top: 16px;
-      border-top: 1.5px solid #f0f0f0;
+      margin-top: 14px;
+      padding-top: 14px;
+      border-top: 1px solid var(--carvo-border);
     }
 
     @media (max-width: 480px) {
@@ -226,8 +275,11 @@
 <body>
 
 <header>
-  <h1>Carvo Book</h1>
-  <p>Transcrição e análise inteligente de reuniões — 100% no navegador</p>
+  <div class="logo-mark">CB</div>
+  <div>
+    <h1>Carvo Book</h1>
+    <p>Inteligência de reuniões para o varejo alimentar</p>
+  </div>
 </header>
 
 <!-- CONFIGURAÇÃO -->
@@ -237,19 +289,22 @@
   <div class="campo-setup">
     <label>Chave da API Groq (gratuita, sem cartão)</label>
     <input type="password" id="cfgChave" placeholder="gsk_...">
-    <small>
-      Crie em <strong>console.groq.com</strong> → API Keys → <strong>Create API Key</strong> → sem cartão
-    </small>
+    <small>Crie em <strong>console.groq.com</strong> → API Keys → Create API Key</small>
   </div>
 
   <div class="campo-setup">
-    <label>Seu e-mail (para receber o relatório)</label>
+    <label>Seu e-mail</label>
     <input type="email" id="cfgEmail" placeholder="seu@email.com">
   </div>
 
+  <div class="campo-setup">
+    <label>Nome da empresa / unidade</label>
+    <input type="text" id="cfgEmpresa" placeholder="Ex: Carvo Restaurante — Unidade Centro">
+  </div>
+
   <div style="margin-top:14px" class="botoes">
-    <button class="btn btn-green" onclick="salvarConfig()">✔ Salvar configuração</button>
-    <button class="btn btn-gray"  onclick="toggleConfig()">Fechar</button>
+    <button class="btn btn-accent" onclick="salvarConfig()">✔ Salvar</button>
+    <button class="btn btn-ghost"  onclick="toggleConfig()">Fechar</button>
   </div>
 </div>
 
@@ -264,10 +319,10 @@
   </div>
 
   <div class="botoes" style="margin-bottom:14px">
-    <button class="btn btn-red"    id="btnGravar" onclick="iniciarGravacao()">🎙️ Iniciar</button>
-    <button class="btn btn-orange" id="btnParar"  onclick="pararGravacao()" disabled>⏹️ Parar</button>
-    <button class="btn btn-gray"   id="btnLimpar" onclick="limparTudo()">🗑️ Limpar</button>
-    <button class="btn btn-gray"   style="margin-left:auto" onclick="toggleConfig()">⚙️ Config</button>
+    <button class="btn btn-danger"   id="btnGravar" onclick="iniciarGravacao()">🎙️ Iniciar</button>
+    <button class="btn btn-ghost"    id="btnParar"  onclick="pararGravacao()" disabled>⏹️ Parar</button>
+    <button class="btn btn-ghost"    id="btnLimpar" onclick="limparTudo()">🗑️ Limpar</button>
+    <button class="btn btn-ghost"    style="margin-left:auto" onclick="toggleConfig()">⚙️ Config</button>
   </div>
 
   <textarea id="transcricao" placeholder="A transcrição aparecerá aqui em tempo real...&#10;&#10;Você também pode colar ou digitar o texto manualmente."></textarea>
@@ -279,52 +334,53 @@
 
 <!-- RELATÓRIO -->
 <div class="card">
-  <h2>📊 Relatório com IA</h2>
+  <h2>📊 Relatório Executivo</h2>
 
   <div id="status"></div>
 
   <div class="botoes">
-    <button class="btn btn-green" id="btnGerar" onclick="gerarRelatorio()">✨ Gerar Relatório</button>
+    <button class="btn btn-accent" id="btnGerar" onclick="gerarRelatorio()">✨ Gerar Relatório</button>
   </div>
 
   <div id="resultado"></div>
 
   <div id="acoesResultado" class="botoes">
-    <button class="btn btn-blue"   onclick="enviarEmail()">📧 Enviar por E-mail</button>
-    <button class="btn btn-purple" onclick="baixarRelatorio()">⬇️ Baixar .txt</button>
-    <button class="btn btn-gray"   onclick="copiarRelatorio()">📋 Copiar</button>
+    <button class="btn btn-primary"  onclick="enviarEmail()">📧 Enviar por E-mail</button>
+    <button class="btn btn-ghost"    onclick="baixarRelatorio()">⬇️ Baixar .txt</button>
+    <button class="btn btn-ghost"    onclick="copiarRelatorio()">📋 Copiar</button>
   </div>
 </div>
 
 <script>
   // ─── CONFIG ──────────────────────────────────────────────
   let cfg = {
-    chave: localStorage.getItem('cb_chave') || '',
-    email: localStorage.getItem('cb_email') || ''
+    chave:   localStorage.getItem('cb_chave')   || '',
+    email:   localStorage.getItem('cb_email')   || '',
+    empresa: localStorage.getItem('cb_empresa') || ''
   };
-
   let relatorioTexto = '';
 
   (function init() {
-    // Só esconde o setup se a chave tiver pelo menos 20 caracteres (chave real)
     if (cfg.chave && cfg.chave.length > 20 && cfg.email) {
       document.getElementById('setup').style.display = 'none';
     }
-    document.getElementById('cfgChave').value = cfg.chave;
-    document.getElementById('cfgEmail').value = cfg.email;
+    document.getElementById('cfgChave').value   = cfg.chave;
+    document.getElementById('cfgEmail').value   = cfg.email;
+    document.getElementById('cfgEmpresa').value = cfg.empresa;
   })();
 
   function salvarConfig() {
-    const chave = document.getElementById('cfgChave').value.trim();
-    const email = document.getElementById('cfgEmail').value.trim();
-    if (!chave) { alert('Cole a chave da API Gemini.'); return; }
+    const chave   = document.getElementById('cfgChave').value.trim();
+    const email   = document.getElementById('cfgEmail').value.trim();
+    const empresa = document.getElementById('cfgEmpresa').value.trim();
+    if (!chave) { alert('Cole a chave da API Groq.'); return; }
     if (!email) { alert('Digite seu e-mail.'); return; }
-    cfg.chave = chave;
-    cfg.email = email;
-    localStorage.setItem('cb_chave', chave);
-    localStorage.setItem('cb_email', email);
+    cfg = { chave, email, empresa };
+    localStorage.setItem('cb_chave',   chave);
+    localStorage.setItem('cb_email',   email);
+    localStorage.setItem('cb_empresa', empresa);
     document.getElementById('setup').style.display = 'none';
-    mostrarStatus('Configuração salva com sucesso!', 'sucesso');
+    mostrarStatus('Configuração salva.', 'sucesso');
   }
 
   function toggleConfig() {
@@ -334,14 +390,10 @@
 
   // ─── GRAVAÇÃO ────────────────────────────────────────────
   const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
-  let rec = null, gravando = false, timer = null, seg = 0;
-  let acumulado = '';
+  let rec = null, gravando = false, timer = null, seg = 0, acumulado = '';
 
   function iniciarGravacao() {
-    if (!SpeechRec) {
-      mostrarStatus('Use o Google Chrome para gravação por voz.', 'erro');
-      return;
-    }
+    if (!SpeechRec) { mostrarStatus('Use o Google Chrome para gravação por voz.', 'erro'); return; }
     navigator.mediaDevices.getUserMedia({ audio: true })
       .then(s => { s.getTracks().forEach(t => t.stop()); comecarRec(); })
       .catch(() => mostrarStatus('Permita o microfone no Chrome e tente novamente.', 'erro'));
@@ -357,7 +409,7 @@
       gravando = true;
       document.getElementById('barraGravando').classList.add('ativo');
       document.getElementById('btnGravar').disabled = true;
-      document.getElementById('btnParar').disabled = false;
+      document.getElementById('btnParar').disabled  = false;
       document.getElementById('duracaoFinal').style.display = 'none';
       seg = 0;
       timer = setInterval(() => {
@@ -398,7 +450,7 @@
     clearInterval(timer);
     document.getElementById('barraGravando').classList.remove('ativo');
     document.getElementById('btnGravar').disabled = false;
-    document.getElementById('btnParar').disabled = true;
+    document.getElementById('btnParar').disabled  = true;
     acumulado = document.getElementById('transcricao').value;
     const m = String(Math.floor(seg/60)).padStart(2,'0');
     const s = String(seg%60).padStart(2,'0');
@@ -409,8 +461,7 @@
 
   function limparTudo() {
     pararGravacao();
-    acumulado = '';
-    relatorioTexto = '';
+    acumulado = ''; relatorioTexto = '';
     document.getElementById('transcricao').value = '';
     document.getElementById('resultado').style.display = 'none';
     document.getElementById('acoesResultado').style.display = 'none';
@@ -432,11 +483,11 @@
     atualizarContador();
   });
 
-  // ─── GEMINI ──────────────────────────────────────────────
+  // ─── GROQ / IA ───────────────────────────────────────────
   async function gerarRelatorio() {
     if (!cfg.chave) {
       document.getElementById('setup').style.display = 'block';
-      mostrarStatus('Configure a chave da API Gemini antes de continuar.', 'erro');
+      mostrarStatus('Configure a chave Groq antes de continuar.', 'erro');
       return;
     }
 
@@ -451,62 +502,64 @@
     document.getElementById('acoesResultado').style.display = 'none';
     mostrarStatus('<span class="spinner"></span> Analisando com IA...', 'carregando');
 
-    const prompt = `Você é um consultor empresarial sênior especializado em gestão, estratégia e análise de reuniões corporativas em português brasileiro. Seu trabalho é transformar transcrições brutas de reuniões em relatórios executivos completos, profissionais e de alto valor analítico.
+    const empresa = cfg.empresa ? `Empresa: ${cfg.empresa}.` : '';
 
-Analise a transcrição abaixo com profundidade e gere um relatório executivo detalhado. Cada seção deve ser escrita em texto corrido, com linguagem formal, clara e orientada a negócios. Seja específico — cite dados, nomes e situações mencionados na reunião quando disponíveis.
+    const prompt = `Você é um consultor empresarial sênior especializado em gestão de negócios no varejo alimentar — restaurantes, redes de alimentação e food service. ${empresa} Sua missão é transformar transcrições de reuniões em relatórios executivos completos, analíticos e orientados à ação.
 
-SEÇÕES DO RELATÓRIO:
+Analise a transcrição abaixo com profundidade. Escreva em linguagem formal, direta e orientada a resultados. Seja específico — cite dados, nomes, valores e situações mencionados na reunião quando disponíveis. Quando não houver dados suficientes para uma seção, indique o que deveria ser levantado.
+
+SEÇÕES OBRIGATÓRIAS:
 
 1. RESUMO EXECUTIVO
-Parágrafo denso de 5 a 8 linhas. Contextualize o propósito da reunião, os principais temas tratados, o tom geral da discussão e os resultados alcançados. Escreva como se fosse para um diretor que não participou da reunião.
+Parágrafo denso de 5 a 8 linhas para um gestor que não participou. Contextualize o propósito, principais temas, tom da discussão e resultados alcançados.
 
-2. CONTEXTO E PAUTA
-Parágrafo explicando o contexto da reunião: por que ela ocorreu, quais eram as expectativas iniciais e qual era o problema ou oportunidade em discussão.
+2. CONTEXTO OPERACIONAL
+Parágrafo explicando o contexto da reunião no negócio: qual problema, oportunidade ou decisão estava em pauta. Relacione ao ciclo do varejo alimentar quando aplicável (CMV, estoque, produção, equipe, vendas, financeiro).
 
 3. ANÁLISE DOS TEMAS DISCUTIDOS
-Texto detalhado e analítico descrevendo cada tema abordado, com profundidade. Explique as posições, argumentos, divergências e convergências apresentadas pelos participantes. Mostre as conexões entre os temas.
+Texto detalhado e analítico. Descreva cada tema com profundidade: posições, argumentos, dados apresentados, divergências e conexões. Avalie a qualidade das discussões.
 
 4. DECISÕES E DELIBERAÇÕES
-Texto formal descrevendo cada decisão tomada, com o racional por trás dela, quem foi responsável pela decisão e qual o impacto esperado para o negócio.
+Texto formal descrevendo cada decisão tomada, com racional, responsável e impacto esperado para o negócio.
 
 5. PLANO DE AÇÃO
-Lista de ações concretas, objetivas e priorizadas. Cada item deve conter: a ação, o responsável (se mencionado) e o prazo (se mencionado).
+Lista de ações priorizadas. Formato: "Ação | Responsável: X | Prazo: Y | Prioridade: Alta/Média/Baixa".
 
-6. ANÁLISE ESTRATÉGICA E RECOMENDAÇÕES DA IA
-Parágrafo analítico profundo com: (a) avaliação crítica das decisões tomadas, (b) riscos identificados que merecem atenção, (c) oportunidades que podem ser exploradas, (d) recomendações estratégicas concretas para maximizar os resultados discutidos.
+6. IMPACTO FINANCEIRO E OPERACIONAL
+Parágrafo analisando o impacto financeiro das decisões e discussões: efeitos sobre CMV, margem de contribuição, fluxo de caixa, estoque, perdas ou custos operacionais. Se não houver dados diretos, aponte o que deve ser monitorado.
 
-7. PONTOS DE ATENÇÃO
-Parágrafo destacando riscos, inconsistências, temas não resolvidos ou pontos que precisam de acompanhamento próximo.
+7. ANÁLISE ESTRATÉGICA E RECOMENDAÇÕES
+Parágrafo com: (a) avaliação crítica das decisões, (b) oportunidades identificadas, (c) recomendações concretas e priorizadas para maximizar resultados no varejo alimentar.
+
+8. INDICADORES A MONITORAR (KPIs)
+Lista de KPIs relevantes para acompanhar os resultados desta reunião. Exemplos: CMV%, ticket médio, giro de estoque, índice de perdas, margem bruta.
+
+9. PONTOS DE ATENÇÃO E RISCOS
+Parágrafo destacando riscos, inconsistências, decisões precipitadas, temas não resolvidos ou pontos que exigem acompanhamento urgente.
 
 Transcrição:
 ${transcricao}
 
-Retorne APENAS um JSON válido, sem markdown, sem texto antes ou depois, com esta estrutura exata:
-{"resumo":"...","contexto":"...","temas_discutidos":"...","decisoes":"...","plano_acao":["ação 1 | Responsável: X | Prazo: Y","ação 2"],"analise_estrategica":"...","pontos_atencao":"..."}`;
+Retorne APENAS um JSON válido, sem markdown, sem texto antes ou depois:
+{"resumo":"...","contexto":"...","temas":"...","decisoes":"...","plano_acao":["..."],"impacto_financeiro":"...","analise_estrategica":"...","kpis":["..."],"pontos_atencao":"..."}`;
 
     try {
-      const resp = await fetch(
-        'https://api.groq.com/openai/v1/chat/completions',
-        {
-          method: 'POST',
-          headers: {
-            'Authorization': 'Bearer ' + cfg.chave,
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            model: 'llama-3.3-70b-versatile',
-            messages: [{ role: 'user', content: prompt }],
-            temperature: 0.2,
-            max_tokens: 2048
-          })
-        }
-      );
+      const resp = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+        method: 'POST',
+        headers: { 'Authorization': 'Bearer ' + cfg.chave, 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          model: 'llama-3.3-70b-versatile',
+          messages: [{ role: 'user', content: prompt }],
+          temperature: 0.2,
+          max_tokens: 3000
+        })
+      });
 
       if (!resp.ok) {
         const err = await resp.json().catch(() => ({}));
         const msg = err.error?.message || ('Status ' + resp.status);
         if (resp.status === 401) throw new Error('Chave inválida. Verifique a chave Groq nas configurações.');
-        if (resp.status === 429) throw new Error('Limite de requisições atingido. Aguarde 1 minuto e tente novamente.');
+        if (resp.status === 429) throw new Error('Limite atingido. Aguarde 1 minuto e tente novamente.');
         throw new Error(msg);
       }
 
@@ -514,103 +567,106 @@ Retorne APENAS um JSON válido, sem markdown, sem texto antes ou depois, com est
       const texto = dados.choices[0].message.content;
       const limpo = texto.replace(/```json\n?/g,'').replace(/```\n?/g,'').trim();
       const match = limpo.match(/\{[\s\S]*\}/);
-      if (!match) throw new Error('A IA não retornou formato JSON válido. Tente novamente.');
+      if (!match) throw new Error('Formato inválido. Tente novamente.');
       const rel = JSON.parse(match[0]);
 
       document.getElementById('btnGerar').disabled = false;
-      mostrarStatus('✅ Relatório gerado com sucesso!', 'sucesso');
+      mostrarStatus('✔ Relatório gerado com sucesso.', 'sucesso');
       exibirRelatorio(rel, transcricao);
 
-    } catch (e) {
+    } catch (err) {
       document.getElementById('btnGerar').disabled = false;
-      mostrarStatus('Erro: <strong>' + e.message + '</strong>', 'erro');
+      mostrarStatus('Erro: <strong>' + err.message + '</strong>', 'erro');
     }
   }
 
   // ─── EXIBIR ──────────────────────────────────────────────
   function exibirRelatorio(r, transcricao) {
-    const data = new Date().toLocaleString('pt-BR');
-    const li = arr => arr.map(i => `<li>${i}</li>`).join('');
+    const data    = new Date().toLocaleString('pt-BR');
+    const empresa = cfg.empresa || 'Carvo';
+    const li = arr => (Array.isArray(arr) ? arr : [arr]).map(i => `<li>${i}</li>`).join('');
 
-    const passos = Array.isArray(r.plano_acao) ? r.plano_acao : [r.plano_acao];
+    const sec = (titulo, classTitulo, icone, conteudo) => `
+      <div class="rel-secao">
+        <div class="rel-secao-titulo ${classTitulo}">${icone} ${titulo}</div>
+        <div class="rel-secao-corpo">${conteudo}</div>
+      </div>`;
+
     document.getElementById('resultado').innerHTML = `
-      <hr>
-      <div class="secao s1">
-        <h3>📋 Resumo Executivo</h3>
-        <p class="resumo-box">${r.resumo}</p>
+      <div class="rel-header">
+        <h2>Relatório Executivo de Reunião</h2>
+        <p>${empresa} &mdash; ${data}</p>
       </div>
-      <div class="secao s2">
-        <h3>🗂️ Contexto e Pauta</h3>
-        <p class="texto-secao">${r.contexto}</p>
-      </div>
-      <div class="secao s2">
-        <h3>💬 Análise dos Temas Discutidos</h3>
-        <p class="texto-secao">${r.temas_discutidos}</p>
-      </div>
-      <div class="secao s3">
-        <h3>✅ Decisões e Deliberações</h3>
-        <p class="texto-secao">${r.decisoes}</p>
-      </div>
-      <div class="secao s4">
-        <h3>🚀 Plano de Ação</h3>
-        <ul>${li(passos)}</ul>
-      </div>
-      <div class="secao s5">
-        <h3>💡 Análise Estratégica e Recomendações</h3>
-        <p class="texto-secao">${r.analise_estrategica}</p>
-      </div>
-      <div class="secao s5" style="border-left:3px solid #ea4335;padding-left:12px">
-        <h3 style="color:#ea4335">⚠️ Pontos de Atenção</h3>
-        <p class="texto-secao">${r.pontos_atencao}</p>
-      </div>
+      ${sec('Resumo Executivo',              't-resumo',     '📋', `<p>${r.resumo}</p>`)}
+      ${sec('Contexto Operacional',          't-contexto',   '🏪', `<p>${r.contexto}</p>`)}
+      ${sec('Análise dos Temas Discutidos',  't-temas',      '💬', `<p>${r.temas}</p>`)}
+      ${sec('Decisões e Deliberações',       't-decisoes',   '✅', `<p>${r.decisoes}</p>`)}
+      ${sec('Plano de Ação',                 't-acao',       '🚀', `<ul>${li(r.plano_acao)}</ul>`)}
+      ${sec('Impacto Financeiro e Operacional', 't-financeiro', '💰', `<p>${r.impacto_financeiro}</p>`)}
+      ${sec('Análise Estratégica e Recomendações', 't-estrategia', '💡', `<p>${r.analise_estrategica}</p>`)}
+      ${sec('Indicadores a Monitorar (KPIs)', 't-kpi',       '📈', `<ul>${li(r.kpis)}</ul>`)}
+      ${sec('Pontos de Atenção e Riscos',    't-atencao',    '⚠️', `<p>${r.pontos_atencao}</p>`)}
     `;
+
     document.getElementById('resultado').style.display = 'block';
     document.getElementById('acoesResultado').style.display = 'flex';
     document.getElementById('resultado').scrollIntoView({ behavior: 'smooth', block: 'start' });
 
-    // Monta texto plano para e-mail e download
+    const liTxt = arr => (Array.isArray(arr) ? arr : [arr]).map((p,i) => `${i+1}. ${p}`).join('\n');
+
     relatorioTexto =
-`CARVO BOOK — RELATÓRIO DE REUNIÃO
+`CARVO BOOK — RELATÓRIO EXECUTIVO DE REUNIÃO
+${empresa}
 Data: ${data}
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+${'═'.repeat(50)}
 RESUMO EXECUTIVO
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+${'═'.repeat(50)}
 ${r.resumo}
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-CONTEXTO E PAUTA
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+${'═'.repeat(50)}
+CONTEXTO OPERACIONAL
+${'═'.repeat(50)}
 ${r.contexto}
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+${'═'.repeat(50)}
 ANÁLISE DOS TEMAS DISCUTIDOS
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-${r.temas_discutidos}
+${'═'.repeat(50)}
+${r.temas}
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+${'═'.repeat(50)}
 DECISÕES E DELIBERAÇÕES
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+${'═'.repeat(50)}
 ${r.decisoes}
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+${'═'.repeat(50)}
 PLANO DE AÇÃO
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-${(Array.isArray(r.plano_acao) ? r.plano_acao : [r.plano_acao]).map((p,i)=>`${i+1}. ${p}`).join('\n')}
+${'═'.repeat(50)}
+${liTxt(r.plano_acao)}
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+${'═'.repeat(50)}
+IMPACTO FINANCEIRO E OPERACIONAL
+${'═'.repeat(50)}
+${r.impacto_financeiro}
+
+${'═'.repeat(50)}
 ANÁLISE ESTRATÉGICA E RECOMENDAÇÕES
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+${'═'.repeat(50)}
 ${r.analise_estrategica}
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-PONTOS DE ATENÇÃO
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+${'═'.repeat(50)}
+INDICADORES A MONITORAR (KPIs)
+${'═'.repeat(50)}
+${liTxt(r.kpis)}
+
+${'═'.repeat(50)}
+PONTOS DE ATENÇÃO E RISCOS
+${'═'.repeat(50)}
 ${r.pontos_atencao}
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+${'═'.repeat(50)}
 TRANSCRIÇÃO COMPLETA
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+${'═'.repeat(50)}
 ${transcricao}
 
 — Gerado pelo Carvo Book`;
@@ -619,11 +675,10 @@ ${transcricao}
   // ─── AÇÕES ───────────────────────────────────────────────
   function enviarEmail() {
     if (!relatorioTexto) return;
-    const data = new Date().toLocaleString('pt-BR');
-    const assunto = encodeURIComponent('[Carvo Book] Relatório de Reunião — ' + data);
+    const data    = new Date().toLocaleString('pt-BR');
+    const assunto = encodeURIComponent(`[Carvo Book] Relatório de Reunião — ${data}`);
     const corpo   = encodeURIComponent(relatorioTexto);
-    const para    = encodeURIComponent(cfg.email || '');
-    window.location.href = `mailto:${para}?subject=${assunto}&body=${corpo}`;
+    window.location.href = `mailto:${encodeURIComponent(cfg.email)}?subject=${assunto}&body=${corpo}`;
   }
 
   function baixarRelatorio() {
@@ -640,11 +695,10 @@ ${transcricao}
   function copiarRelatorio() {
     if (!relatorioTexto) return;
     navigator.clipboard.writeText(relatorioTexto)
-      .then(() => mostrarStatus('Relatório copiado para a área de transferência!', 'sucesso'))
+      .then(() => mostrarStatus('Relatório copiado.', 'sucesso'))
       .catch(() => mostrarStatus('Não foi possível copiar. Use o botão Baixar.', 'erro'));
   }
 
-  // ─── UTILITÁRIOS ─────────────────────────────────────────
   function mostrarStatus(msg, tipo) {
     const el = document.getElementById('status');
     el.innerHTML = msg;
