@@ -5,40 +5,81 @@ const GEMINI_API_KEY = 'COLE_SUA_CHAVE_AQUI'; // aistudio.google.com → Get API
 const NOME_PLANILHA  = 'Carvo Book - Relatórios';
 
 // ============================================================
-// doGet — mantido para teste rápido via URL
+// doGet — serve resultados via token (CORS funciona em GET)
 // ============================================================
-function doGet() {
+function doGet(e) {
+  const action = e && e.parameter && e.parameter.action;
+  const token  = e && e.parameter && e.parameter.token;
+
+  // Ping de status
+  if (!action) {
+    return ContentService
+      .createTextOutput(JSON.stringify({ status: 'Carvo Book online' }))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
+
+  // Busca resultado pelo token
+  if (action === 'resultado' && token) {
+    const props = PropertiesService.getScriptProperties();
+    const raw   = props.getProperty('resultado_' + token);
+
+    if (!raw) {
+      // Ainda processando
+      return ContentService
+        .createTextOutput(JSON.stringify({ pronto: false }))
+        .setMimeType(ContentService.MimeType.JSON);
+    }
+
+    // Remove o resultado armazenado (limpeza)
+    props.deleteProperty('resultado_' + token);
+    return ContentService
+      .createTextOutput(raw)
+      .setMimeType(ContentService.MimeType.JSON);
+  }
+
   return ContentService
-    .createTextOutput(JSON.stringify({ status: 'Carvo Book online' }))
+    .createTextOutput(JSON.stringify({ erro: 'Ação inválida.' }))
     .setMimeType(ContentService.MimeType.JSON);
 }
 
 // ============================================================
-// doPost — recebe transcrição do GitHub Pages
+// doPost — recebe transcrição do GitHub Pages via form
 // ============================================================
 function doPost(e) {
   try {
-    const dados = JSON.parse(e.postData.contents);
+    // Dados chegam como parâmetros de formulário (form submit)
+    const transcricao = e.parameter.transcricao;
+    const token       = e.parameter.token;
 
-    if (!dados.transcricao) {
-      throw new Error('Transcrição não enviada.');
-    }
+    if (!transcricao) throw new Error('Transcrição não enviada.');
 
-    const relatorio = processarTranscricao(dados.transcricao);
-    const resultado = salvarEEnviar(dados.transcricao, relatorio);
+    const relatorio = processarTranscricao(transcricao);
+    const resultado = salvarEEnviar(transcricao, relatorio);
 
-    return ContentService
-      .createTextOutput(JSON.stringify({
-        sucesso: true,
+    // Armazena resultado para o frontend buscar via GET
+    if (token) {
+      const payload = JSON.stringify({
+        pronto: true,
         relatorio: relatorio,
         sheetUrl: resultado.sheetUrl
-      }))
-      .setMimeType(ContentService.MimeType.JSON);
+      });
+      PropertiesService.getScriptProperties().setProperty('resultado_' + token, payload);
+    }
+
+    return ContentService
+      .createTextOutput('ok')
+      .setMimeType(ContentService.MimeType.TEXT);
 
   } catch (err) {
+    if (e.parameter.token) {
+      PropertiesService.getScriptProperties().setProperty(
+        'resultado_' + e.parameter.token,
+        JSON.stringify({ pronto: true, erro: err.message })
+      );
+    }
     return ContentService
-      .createTextOutput(JSON.stringify({ sucesso: false, erro: err.message }))
-      .setMimeType(ContentService.MimeType.JSON);
+      .createTextOutput('erro')
+      .setMimeType(ContentService.MimeType.TEXT);
   }
 }
 

@@ -422,6 +422,8 @@
     document.getElementById('transcricao').addEventListener('input', atualizarContador);
 
     // ─── RELATÓRIO ───────────────────────────────────────────
+    // Apps Script redireciona POST cross-origin (CORS bloqueado pelo browser).
+    // Solução: envia via formulário oculto (bypassa CORS) + busca resultado via GET com token.
     function gerarRelatorio() {
       if (!APPS_SCRIPT_URL) {
         document.getElementById('bannerConfig').style.display = 'block';
@@ -438,30 +440,80 @@
       document.getElementById('btnGerar').disabled = true;
       document.getElementById('resultado').style.display = 'none';
       document.getElementById('linkPlanilha').style.display = 'none';
-      mostrarStatus('<span class="spinner"></span> Analisando com IA e salvando...', 'carregando');
 
-      fetch(APPS_SCRIPT_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-        body: JSON.stringify({ transcricao: transcricao })
-      })
-      .then(r => r.json())
-      .then(dados => {
-        document.getElementById('btnGerar').disabled = false;
-        if (!dados.sucesso) throw new Error(dados.erro || 'Erro desconhecido.');
+      // Gera token único para identificar esta requisição
+      const token = Date.now().toString(36) + Math.random().toString(36).slice(2);
 
-        mostrarStatus('✅ Relatório gerado, salvo no Sheets e enviado por e-mail!', 'sucesso');
-        exibirRelatorio(dados.relatorio);
+      mostrarStatus('<span class="spinner"></span> Enviando para processamento...', 'carregando');
 
-        if (dados.sheetUrl) {
-          document.getElementById('urlPlanilha').href = dados.sheetUrl;
-          document.getElementById('linkPlanilha').style.display = 'block';
-        }
-      })
-      .catch(err => {
-        document.getElementById('btnGerar').disabled = false;
-        mostrarStatus('Erro: ' + err.message, 'erro');
+      // Envia via form oculto — contorna o bloqueio CORS do Apps Script
+      enviarViaForm(APPS_SCRIPT_URL, { transcricao: transcricao, token: token });
+
+      // Aguarda e busca o resultado via GET (CORS funciona normalmente em GET)
+      mostrarStatus('<span class="spinner"></span> Processando com IA... aguarde (~20 segundos)', 'carregando');
+      aguardarResultado(token, 0);
+    }
+
+    function enviarViaForm(url, dados) {
+      const form = document.createElement('form');
+      form.method = 'POST';
+      form.action = url;
+      form.target = 'iframe-oculto'; // envia para iframe invisível, não navega a página
+
+      Object.entries(dados).forEach(([k, v]) => {
+        const input = document.createElement('input');
+        input.type = 'hidden';
+        input.name = k;
+        input.value = v;
+        form.appendChild(input);
       });
+
+      // Iframe invisível para receber o POST sem redirecionar a página
+      let iframe = document.getElementById('iframe-oculto');
+      if (!iframe) {
+        iframe = document.createElement('iframe');
+        iframe.name = 'iframe-oculto';
+        iframe.style.display = 'none';
+        document.body.appendChild(iframe);
+      }
+
+      document.body.appendChild(form);
+      form.submit();
+      document.body.removeChild(form);
+    }
+
+    function aguardarResultado(token, tentativa) {
+      const MAX = 15; // até ~75 segundos (15 x 5s)
+      if (tentativa >= MAX) {
+        document.getElementById('btnGerar').disabled = false;
+        mostrarStatus('⏱️ Tempo excedido. Verifique seu e-mail — o relatório pode ter sido enviado.', 'info');
+        return;
+      }
+
+      setTimeout(() => {
+        const url = APPS_SCRIPT_URL + '?action=resultado&token=' + token;
+        fetch(url)
+          .then(r => r.json())
+          .then(dados => {
+            document.getElementById('btnGerar').disabled = false;
+            if (dados.pronto) {
+              mostrarStatus('✅ Relatório gerado, salvo no Sheets e enviado por e-mail!', 'sucesso');
+              exibirRelatorio(dados.relatorio);
+              if (dados.sheetUrl) {
+                document.getElementById('urlPlanilha').href = dados.sheetUrl;
+                document.getElementById('linkPlanilha').style.display = 'block';
+              }
+            } else if (dados.erro) {
+              mostrarStatus('Erro: ' + dados.erro, 'erro');
+            } else {
+              // Ainda processando, tenta novamente
+              document.getElementById('btnGerar').disabled = true;
+              mostrarStatus(`<span class="spinner"></span> Processando... (${tentativa + 1}/${MAX})`, 'carregando');
+              aguardarResultado(token, tentativa + 1);
+            }
+          })
+          .catch(() => aguardarResultado(token, tentativa + 1));
+      }, 5000);
     }
 
     function exibirRelatorio(r) {
